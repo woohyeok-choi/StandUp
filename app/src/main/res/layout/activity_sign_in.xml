@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    android:id="@+id/layout_sign_in"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:paddingStart="@dimen/activity_root_horizontal_padding"
+        android:paddingEnd="@dimen/activity_root_horizontal_padding"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtAppTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_title_size"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:text="@string/app_name"/>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/btnSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtAppTitle"
+        />
+
+    </RelativeLayout>
+</androidx.core.widget.NestedScrollView>

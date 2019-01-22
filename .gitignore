@@ -1,5 +1,5 @@
 # Built application files
-*.apk
+# *.apk
 *.ap_
 *.aab
 
@@ -35,6 +35,7 @@ captures/
 
 # IntelliJ
 *.iml
+.idea
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/gradle.xml
@@ -75,3 +76,9 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+# Objectbox Model
+app/objectbox-models
+
+# Google Service Secret
+app/google-services.json

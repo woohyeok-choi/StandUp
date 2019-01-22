@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:gravity="center_vertical"
+    android:paddingStart="?android:attr/listPreferredItemPaddingLeft"
+    android:paddingEnd="?android:attr/listPreferredItemPaddingRight"
+    android:clipChildren="false"
+    android:clipToPadding="false" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginEnd="8dip"
+        android:layout_marginTop="6dip"
+        android:layout_marginBottom="6dip"
+        android:layout_weight="1"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <TextView
+            android:text="TEST"
+            android:id="@android:id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearanceMaterialSubhead"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal" />
+
+        <TextView android:id="@android:id/summary"
+            android:text="zxcvzxcvzxcvz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@android:id/title"
+            android:layout_alignStart="@android:id/title"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:attr/textColorSecondary"
+            android:maxLines="4" />
+
+        <RelativeLayout
+            android:layout_below="@android:id/summary"
+            android:layout_alignStart="@android:id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/rangeStart"
+                android:text="zxcvzxcv"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/bar_track"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_alignBottom="@id/rangeBar"
+                android:layout_alignParentStart="true"/>
+
+            <com.appyvet.materialrangebar.RangeBar
+                android:id="@+id/rangeBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/rangeEnd"
+                android:layout_toEndOf="@id/rangeStart"
+                android:layout_marginTop="-32dp"
+                android:layout_marginBottom="-10dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                app:mrb_rangeBar="true"
+                app:mrb_rangeBar_rounded="true"
+                app:mrb_temporaryPins="true"
+                app:mrb_rangeBarColor="@color/bar_track"
+                app:mrb_connectingLineColor="@color/bar_selector"
+                app:mrb_selectorColor ="@color/bar_selector"
+                app:mrb_tickColor="@android:color/transparent"
+                app:mrb_pinRadius="0dp"
+                app:mrb_selectorSize="6dp"/>
+
+            <TextView
+                android:id="@+id/rangeEnd"
+                android:text="zxcvzxcv"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/bar_track"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_alignBottom="@id/rangeBar"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+</LinearLayout>

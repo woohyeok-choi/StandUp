@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:key="@string/pref_category_intervention"
+        app:title="@string/pref_category_intervention_title">
+
+        <kr.ac.kaist.iclab.standup.foreground.preference.SeekBarPreference
+            app:key="@string/pref_intervention_init_interval"
+            app:title="@string/pref_intervention_init_interval_title"
+            app:summary="@string/pref_intervention_init_interval_summary"
+            app:sbp_min="15"
+            app:sbp_max="120"
+            app:defaultValue="60"
+            app:sbp_sectionCount="7"/>
+
+        <kr.ac.kaist.iclab.standup.foreground.preference.SeekBarPreference
+            app:key="@string/pref_intervention_retry_interval"
+            app:title="@string/pref_intervention_retry_interval_title"
+            app:summary="@string/pref_intervention_retry_interval_summary"
+            app:sbp_min="15"
+            app:sbp_max="120"
+            app:defaultValue="30"
+            app:sbp_sectionCount="7"/>
+
+        <kr.ac.kaist.iclab.standup.foreground.preference.SeekBarPreference
+            app:key="@string/pref_intervention_snooze_duration"
+            app:title="@string/pref_intervention_snooze_duration_title"
+            app:summary="@string/pref_intervention_snooze_duration_summary"
+            app:sbp_min="15"
+            app:sbp_max="120"
+            app:defaultValue="60"
+            app:sbp_sectionCount="7"/>
+
+        <kr.ac.kaist.iclab.standup.foreground.preference.LocalTimeRangePreference
+            app:key="@string/pref_intervention_daily_time_range"
+            app:title="@string/pref_intervention_daily_time_range_title"
+            app:summary="@string/pref_intervention_daily_time_range_summary"
+            app:defaultValue="09:00-21:00"
+            app:ltrp_tickIntervalMin="30"/>
+
+        <kr.ac.kaist.iclab.standup.foreground.preference.DaysOfWeekPreference
+            app:key="@string/pref_intervention_days_of_week"
+            app:title="@string/pref_intervention_days_of_week_title"
+            app:defaultValue="@array/weekdays"
+            app:summary="@string/pref_intervention_days_of_week_summary"/>
+
+        <SwitchPreferenceCompat
+            app:key="@string/pref_intervention_should_snooze"
+            app:title="@string/pref_intervention_should_snooze_title"
+            app:summary="@string/pref_intervention_should_snooze_summary"
+            app:defaultValue="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="@string/pref_category_status"
+        app:title="@string/pref_category_status_title">
+
+        <Preference
+            app:key="@string/pref_intervention_snooze_until"
+            app:title="@string/pref_intervention_snooze_until_title"
+            app:selectable="false"/>
+
+        <Preference
+            app:key="@string/pref_status_collector"
+            app:title="@string/pref_status_collector_title"
+            app:selectable="false"/>
+
+        <Preference
+            app:key="@string/pref_status_sedentariness"
+            app:title="@string/pref_status_sedentariness_title"
+            app:selectable="false"/>
+
+    </PreferenceCategory>
+
+
+</androidx.preference.PreferenceScreen>
