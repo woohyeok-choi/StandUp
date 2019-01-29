@@ -1,7 +1,7 @@
 # StandUp
 
 ## Download
-* [Latest release](./apks/kr.ac.kaist.iclab.standup-v1.1-debug.apk) 
+* [Latest release](./apks/kr.ac.kaist.iclab.standup-v1.1.1-debug.apk)(v1.1.1)
 
 
 ## How to use

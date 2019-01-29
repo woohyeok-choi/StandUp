@@ -135,8 +135,8 @@ class DashboardFragment : Fragment() {
             it.stat?.totalDurationMillis?.toDouble() ?: 0.0
         }
 
-        val weeklyAvgOfDailyAvg = (weeklySumOfDailyAvg / prevSize).let { TimeUnit.MILLISECONDS.toMinutes(it.toLong()) }
-        val weeklyAvgOfDailyTotal = (weeklySumOfDailyTotal / prevSize).let { TimeUnit.MILLISECONDS.toMinutes(it.toLong()) }
+        val weeklyAvgOfDailyAvg = if(prevSize == 0) null else (weeklySumOfDailyAvg / prevSize).let { TimeUnit.MILLISECONDS.toMinutes(it.toLong()) }
+        val weeklyAvgOfDailyTotal = if(prevSize == 0) null else (weeklySumOfDailyTotal / prevSize).let { TimeUnit.MILLISECONDS.toMinutes(it.toLong()) }
 
 
         /** Width **/
@@ -188,15 +188,18 @@ class DashboardFragment : Fragment() {
         chart.axisLeft.setDrawGridLines(false)
         chart.axisLeft.labelCount = 5
         chart.axisLeft.setValueFormatter { value, _ -> "${value.toInt()} $labelUnitMin" }
-        chart.axisLeft.addLimitLine(
-            LimitLine(weeklyAvgOfDailyAvg.toFloat(), labelWeeklyAverage).apply {
-                lineColor = ResourcesCompat.getColor(resources, R.color.primary, null)
-                labelPosition = LimitLine.LimitLabelPosition.LEFT_TOP
-                textSize = 14F
-                lineWidth = 2.0F
-                enableDashedLine(12.0F, 6.0F, 0F)
-            }
-        )
+        weeklyAvgOfDailyAvg?.let {
+            chart.axisLeft.addLimitLine(
+                LimitLine(it.toFloat(), labelWeeklyAverage).apply {
+                    lineColor = ResourcesCompat.getColor(resources, R.color.primary, null)
+                    labelPosition = LimitLine.LimitLabelPosition.LEFT_TOP
+                    textSize = 14F
+                    lineWidth = 2.0F
+                    enableDashedLine(12.0F, 6.0F, 0F)
+                }
+            )
+        }
+
 
         /** Right axis for daily total */
         chart.axisRight.isGranularityEnabled = false
@@ -205,16 +208,17 @@ class DashboardFragment : Fragment() {
         chart.axisRight.labelCount = 5
         chart.axisRight.setDrawGridLines(false)
         chart.axisRight.setValueFormatter { value, _ -> "${value.toInt()} $labelUnitMin" }
-
-        chart.axisRight.addLimitLine(
-            LimitLine(weeklyAvgOfDailyTotal.toFloat(), labelWeeklyAverage).apply {
-                lineColor = ResourcesCompat.getColor(resources, R.color.secondary, null)
-                labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
-                textSize = 14F
-                lineWidth = 2.0F
-                enableDashedLine(12.0F, 6.0F, 0F)
-            }
-        )
+        weeklyAvgOfDailyTotal?.let {
+            chart.axisRight.addLimitLine(
+                LimitLine(it.toFloat(), labelWeeklyAverage).apply {
+                    lineColor = ResourcesCompat.getColor(resources, R.color.secondary, null)
+                    labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
+                    textSize = 14F
+                    lineWidth = 2.0F
+                    enableDashedLine(12.0F, 6.0F, 0F)
+                }
+            )
+        }
 
         /** X axis */
         chart.xAxis.axisMinimum = weeklyData.xMin
