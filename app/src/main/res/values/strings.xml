@@ -10,9 +10,9 @@
     <string name="general_daily_average">일일 평균</string>
     <string name="general_daily_total">일일 총합</string>
     <string name="general_none_collection">측정치 없음</string>
-    <string name="general_weekly_average">1주 평균</string>
+    <string name="general_weekly_average">최근 일주일 평균</string>
 
-    <string name="menu_bottom_dashboard">대쉬보드</string>
+    <string name="menu_bottom_dashboard">대시보드</string>
     <string name="menu_bottom_timeline">타임라인</string>
     <string name="menu_bottom_config">설정</string>
 
@@ -30,8 +30,8 @@
     <string name="item_title_average_sedentary_time">평균 앉은 시간</string>
     <string name="item_title_total_sedentary_time">총 앉은 시간</string>
 
-    <string name="item_title_weekly_sedentary_stat">최근 일주일간 앉은 시간</string>
-    <string name="item_title_weekly_active_stat">최근 일주일간 움직인 시간</string>
+    <string name="item_title_weekly_sedentary_stat">최근 일주일 간 앉은 시간</string>
+    <string name="item_title_weekly_active_stat">최근 일주일 간 움직인 시간</string>
 
     <string name="noti_action_snooze">방해 금지</string>
     <string name="noti_action_already_stand_up">이미 움직임</string>
@@ -64,15 +64,15 @@
     <!-- Preference keys and corresponding title/summary visible to users-->
     <string name="pref_intervention_init_interval">pref_intervention_init_interval</string>
     <string name="pref_intervention_init_interval_title">알림 전달 주기 (분)</string>
-    <string name="pref_intervention_init_interval_summary">이 시간 만큼 계속 앉아 있으면 알림을 전달합니다.</string>
+    <string name="pref_intervention_init_interval_summary">이 시간 만큼 계속 앉아 있으면 기상 알림을 전달합니다.</string>
 
     <string name="pref_intervention_retry_interval">pref_intervention_retry_interval</string>
     <string name="pref_intervention_retry_interval_title">알림 재 전달 주기 (분)</string>
-    <string name="pref_intervention_retry_interval_summary">한번 알림이 전달된 후 이 시간만큼 지나면 알림을 다시 전달합니다.</string>
+    <string name="pref_intervention_retry_interval_summary">한번 알림이 전달된 후 이 시간만큼 지나면 기상 알림을 다시 전달합니다.</string>
 
     <string name="pref_intervention_snooze_duration">pref_intervention_snooze_duration</string>
     <string name="pref_intervention_snooze_duration_title">방해 금지 모드 길이 (분)</string>
-    <string name="pref_intervention_snooze_duration_summary">방해 금지 설정 시 이 시간만큼 알림을 전달하지 않습니다.</string>
+    <string name="pref_intervention_snooze_duration_summary">알림이 전달 되었을 때 방해 금지 선택 시 현재 시간부터 이 시간만큼 기상 알림을 전달하지 않습니다.</string>
 
     <string name="pref_intervention_should_snooze">pref_intervention_should_snooze</string>
     <string name="pref_intervention_should_snooze_title">알림 중지</string>
@@ -80,11 +80,11 @@
 
     <string name="pref_intervention_daily_time_range">pref_intervention_daily_time_range</string>
     <string name="pref_intervention_daily_time_range_title">신체 활동 수집 시간</string>
-    <string name="pref_intervention_daily_time_range_summary">하루에 신체 활동 내역을 수집할 시간을 설정합니다. 알림 또한 이 시간을 기준으로 전달됩니다.</string>
+    <string name="pref_intervention_daily_time_range_summary">하루에 신체 활동 내역을 수집할 시간을 설정합니다. 기상 알림 또한 이 시간을 기준으로 전달됩니다.</string>
 
     <string name="pref_intervention_days_of_week">pref_intervention_days_of_week</string>
     <string name="pref_intervention_days_of_week_title">알림 전달 요일</string>
-    <string name="pref_intervention_days_of_week_summary">알림을 전달할 요일을 설정합니다.</string>
+    <string name="pref_intervention_days_of_week_summary">기상 알림을 전달할 요일을 설정합니다.</string>
 
     <!-- Preference keys disallow to set by user -->
     <string name="pref_intervention_snooze_until">pref_intervention_snooze_until</string>
@@ -92,10 +92,10 @@
     <string name="pref_intervention_snooze_until_summary_off">없음</string>
 
     <string name="pref_status_collector">pref_status_collector</string>
-    <string name="pref_status_collector_title">위치/행동 수집기 상태</string>
+    <string name="pref_status_collector_title">행동 수집기 상태</string>
 
     <string name="pref_status_sedentariness">pref_status_sedentariness</string>
-    <string name="pref_status_sedentariness_title">행동 상태</string>
+    <string name="pref_status_sedentariness_title">인식된 행동</string>
     <string-array name="weekdays">
         <item>MONDAY</item>
         <item>TUESDAY</item>

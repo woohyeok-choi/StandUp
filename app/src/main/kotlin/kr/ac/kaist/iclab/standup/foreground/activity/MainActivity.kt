@@ -4,18 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.MenuItem
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.android.gms.tasks.Tasks
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
 import kotlinx.android.synthetic.main.activity_main.*
 import kr.ac.kaist.iclab.standup.R
 import kr.ac.kaist.iclab.standup.background.SedentaryRecognitionService
-import kr.ac.kaist.iclab.standup.common.Messages.showSnackBar
 import kr.ac.kaist.iclab.standup.common.Messages.showToast
 import kr.ac.kaist.iclab.standup.common.Permissions
 import kr.ac.kaist.iclab.standup.foreground.fragment.ConfigFragment
@@ -60,7 +55,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
 
             if(!isAlreadyGranted) {
-                showSnackBar(container, if(isGranted) R.string.msg_normal_permission_grated else R.string.msg_error_permission_denied)
+                showToast(this, if(isGranted) R.string.msg_normal_permission_grated else R.string.msg_error_permission_denied)
             }
         }
     }
