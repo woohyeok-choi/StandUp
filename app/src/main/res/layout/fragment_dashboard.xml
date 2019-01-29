@@ -3,18 +3,136 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:orientation="vertical">
 
-        <TextView
+        <kr.ac.kaist.iclab.standup.foreground.adapter.AutoHeightViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dashboard"/>
-    </LinearLayout>
+            android:layout_marginStart="@dimen/item_horizontal_margin"
+            android:layout_marginEnd="@dimen/item_horizontal_margin"
+            android:layout_marginBottom="@dimen/section_vertical_margin"
+            android:layout_marginTop="@dimen/section_vertical_margin"
+            app:contentPaddingTop="@dimen/card_view_vertical_padding"
+            app:contentPaddingBottom="@dimen/card_view_vertical_padding"
+            app:contentPaddingLeft="@dimen/card_view_horizontal_padding"
+            app:contentPaddingRight="@dimen/card_view_horizontal_padding">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:drawableStart="@drawable/ic_sedentary_round"
+                    android:drawablePadding="6dp"
+                    android:textStyle="bold"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/item_title_weekly_sedentary_stat"
+                    android:layout_marginBottom="@dimen/section_vertical_margin"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp">
+
+                    <androidx.core.widget.ContentLoadingProgressBar
+                        android:id="@+id/progressBarSedentary"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        style="@android:style/Widget.Material.Light.ProgressBar.Large"/>
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/txtErrorSedentary"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:visibility="gone"
+                        android:id="@+id/chartWeeklySedentaryStat"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                </FrameLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_horizontal_margin"
+            android:layout_marginEnd="@dimen/item_horizontal_margin"
+            android:layout_marginBottom="@dimen/section_vertical_margin"
+            android:layout_marginTop="@dimen/section_vertical_margin"
+            app:contentPaddingTop="@dimen/card_view_vertical_padding"
+            app:contentPaddingBottom="@dimen/card_view_vertical_padding"
+            app:contentPaddingLeft="@dimen/card_view_horizontal_padding"
+            app:contentPaddingRight="@dimen/card_view_horizontal_padding">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:gravity="center_vertical"
+                    android:drawableStart="@drawable/ic_standup_round"
+                    android:drawablePadding="6dp"
+                    android:textStyle="bold"
+                    android:text="@string/item_title_weekly_active_stat"
+                    android:layout_marginBottom="@dimen/section_vertical_margin"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp">
+
+                    <androidx.core.widget.ContentLoadingProgressBar
+                        android:id="@+id/progressBarActive"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        style="@android:style/Widget.Material.Light.ProgressBar.Large"/>
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/txtErrorActive"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:visibility="gone"
+                        android:id="@+id/chartWeeklyActiveStat"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"/>
+                </FrameLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.cardview.widget.CardView>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
 </androidx.core.widget.NestedScrollView>

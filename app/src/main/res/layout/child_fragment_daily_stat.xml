@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/item_horizontal_margin"
+        android:layout_marginEnd="@dimen/item_horizontal_margin"
+        android:layout_marginBottom="@dimen/section_vertical_margin"
+        android:layout_marginTop="@dimen/section_vertical_margin"
+        app:contentPaddingTop="@dimen/card_view_vertical_padding"
+        app:contentPaddingBottom="@dimen/card_view_vertical_padding"
+        app:contentPaddingLeft="4dp"
+        app:contentPaddingRight="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtStatTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/section_vertical_margin"
+                android:layout_alignParentTop="true"/>
+
+            <FrameLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtStatTime"
+                android:layout_toEndOf="@id/btnBefore"
+                android:layout_toStartOf="@id/btnAfter">
+
+                <androidx.core.widget.ContentLoadingProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    style="@android:style/Widget.Material.Light.ProgressBar.Large"/>
+
+                <TextView
+                    android:id="@+id/txtError"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/statContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/section_horizontal_margin"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/lblAvgSedentaryTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/primary_dark"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:text="@string/item_title_average_sedentary_time"/>
+
+                        <FrameLayout
+                            android:layout_below="@id/lblAvgSedentaryTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="82dp">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:visibility="gone"
+                                android:id="@+id/txtErrorAvgSedentary"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="@string/general_none_collection"
+                                android:gravity="end|center_vertical"
+                                android:textColor="@color/primary"
+                                android:textStyle="bold"/>
+
+                            <RelativeLayout
+                                android:visibility="gone"
+                                android:id="@+id/avgStatContainer"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/txtAvgSedentaryTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_toStartOf="@id/lblAvgSedentaryTimeMin"
+                                    android:gravity="end"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:textColor="@color/primary"
+                                    android:textSize="@dimen/text_large_content_size"
+                                    android:textStyle="bold"/>
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/lblAvgSedentaryTimeMin"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignTop="@id/txtAvgSedentaryTime"
+                                    android:layout_alignBottom="@id/txtAvgSedentaryTime"
+                                    android:layout_alignParentEnd="true"
+                                    android:gravity="center_vertical|end"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/primary"
+                                    android:text="@string/unit_minute"/>
+                            </RelativeLayout>
+                        </FrameLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/section_horizontal_margin"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/lblTotalSedentaryTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="start"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/secondary_dark"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentStart="true"
+                            android:text="@string/item_title_total_sedentary_time"/>
+
+                        <FrameLayout
+                            android:layout_below="@id/lblTotalSedentaryTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="82dp">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:visibility="gone"
+                                android:id="@+id/txtErrorTotalSedentary"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="@string/general_none_collection"
+                                android:gravity="start|center_vertical"
+                                android:textColor="@color/secondary"
+                                android:textStyle="bold"/>
+
+                            <RelativeLayout
+                                android:visibility="gone"
+                                android:id="@+id/totalStatContainer"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/txtTotalSedentaryTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentStart="true"
+                                    android:gravity="start"
+                                    android:textSize="@dimen/text_large_content_size"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/secondary"/>
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/lblTotalSedentaryTimeMin"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignTop="@id/txtTotalSedentaryTime"
+                                    android:layout_alignBottom="@id/txtTotalSedentaryTime"
+                                    android:layout_toEndOf="@id/txtTotalSedentaryTime"
+                                    android:gravity="center_vertical|start"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/secondary"
+                                    android:text="@string/unit_minute"/>
+
+                            </RelativeLayout>
+                        </FrameLayout>
+                    </RelativeLayout>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </FrameLayout>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btnBefore"
+                android:layout_width="12dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@id/container"
+                android:layout_alignBottom="@id/container"
+                android:tint="@android:color/darker_gray"
+                android:background="@android:color/transparent"
+                android:src="@drawable/baseline_navigate_before_black_24"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btnAfter"
+                android:layout_width="12dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@id/container"
+                android:layout_alignBottom="@id/container"
+                android:tint="@android:color/darker_gray"
+                android:background="@android:color/transparent"
+                android:src="@drawable/baseline_navigate_next_black_24"/>
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

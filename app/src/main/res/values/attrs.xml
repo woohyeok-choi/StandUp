@@ -10,5 +10,4 @@
         <attr name="sbp_sectionCount" format="reference|integer"/>
         <attr name="sbp_sectionTextCount" format="reference|integer"/>
     </declare-styleable>
-
 </resources>

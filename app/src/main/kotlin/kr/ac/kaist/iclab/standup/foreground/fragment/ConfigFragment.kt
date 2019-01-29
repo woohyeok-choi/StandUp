@@ -10,7 +10,7 @@ import androidx.preference.PreferenceFragmentCompat
 import kr.ac.kaist.iclab.standup.R
 import kr.ac.kaist.iclab.standup.background.ActivityTransitionCollector
 import kr.ac.kaist.iclab.standup.background.EventHandler
-import kr.ac.kaist.iclab.standup.util.ConfigManager
+import kr.ac.kaist.iclab.standup.common.ConfigManager
 
 class ConfigFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -24,6 +24,7 @@ class ConfigFragment : PreferenceFragmentCompat() {
         context?.let {
             val configManager = ConfigManager.getInstance(it)
             updateSnoozeUntil(it, configManager, snoozeUntilPreference)
+
             observeCollectorStatus(collectorStatusPreference)
             observeSedentaryStatus(it, sedentaryStatusPreference)
         }
@@ -46,7 +47,7 @@ class ConfigFragment : PreferenceFragmentCompat() {
     }
 
     private fun observeCollectorStatus(preference: Preference) {
-        ActivityTransitionCollector.status.observe(this, Observer {
+        ActivityTransitionCollector.getInstance().status.observe(this, Observer {
             val error = it.error?.localizedMessage?.let { msg -> "($msg)" } ?: ""
             val summary = "${it.state.name} $error"
 
@@ -55,7 +56,7 @@ class ConfigFragment : PreferenceFragmentCompat() {
     }
 
     private fun observeSedentaryStatus(context: Context, preference: Preference) {
-        EventHandler.status.observe(this, Observer {
+        EventHandler.getInstance().status.observe(this, Observer {
             val triggerAt = it.triggerAt?.let { triggerAt ->
                 DateUtils.formatDateTime(context, triggerAt, DateUtils.FORMAT_SHOW_TIME or DateUtils.FORMAT_SHOW_DATE)
             }?.let { msg ->
@@ -64,5 +65,9 @@ class ConfigFragment : PreferenceFragmentCompat() {
             val summary = "${it.state.name} $triggerAt"
             preference.summary = summary
         })
+    }
+
+    companion object {
+        fun newInstance() = ConfigFragment()
     }
 }

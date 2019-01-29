@@ -4,13 +4,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.TypedArray
 import android.util.AttributeSet
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import com.appyvet.materialrangebar.RangeBar
 import kr.ac.kaist.iclab.standup.R
 import kr.ac.kaist.iclab.standup.common.LocalTime
 import java.lang.Exception
+import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -18,8 +19,8 @@ class LocalTimeRangePreference(context: Context, attributeSet: AttributeSet, def
     constructor(context: Context, attributeSet: AttributeSet) : this(context, attributeSet, 0)
 
     private var currentValue: Pair<LocalTime, LocalTime> = DEFAULT_VALUE
-    private var txtRangeStart: TextView? = null
-    private var txtRangeEnd: TextView? = null
+    private var txtRangeStart: AppCompatTextView? = null
+    private var txtRangeEnd: AppCompatTextView? = null
 
     private val tickIntervalMin: Int
 
@@ -47,11 +48,11 @@ class LocalTimeRangePreference(context: Context, attributeSet: AttributeSet, def
     }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder?) {
-        (holder?.findViewById(android.R.id.title) as? TextView)?.text = title
-        (holder?.findViewById(android.R.id.summary) as? TextView)?.text = summary
+        (holder?.findViewById(android.R.id.title) as? AppCompatTextView)?.text = title
+        (holder?.findViewById(android.R.id.summary) as? AppCompatTextView)?.text = summary
 
-        txtRangeStart = holder?.findViewById(R.id.rangeStart) as? TextView
-        txtRangeEnd = holder?.findViewById(R.id.rangeEnd) as? TextView
+        txtRangeStart = holder?.findViewById(R.id.rangeStart) as? AppCompatTextView
+        txtRangeEnd = holder?.findViewById(R.id.rangeEnd) as? AppCompatTextView
 
         txtRangeStart?.text = formatLocalTime(currentValue.first)
         txtRangeEnd?.text = formatLocalTime(currentValue.second)
@@ -94,7 +95,7 @@ class LocalTimeRangePreference(context: Context, attributeSet: AttributeSet, def
         }
     }
 
-    class Delegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Pair<LocalTime, LocalTime>) :
+    class ReadWriteDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Pair<LocalTime, LocalTime>) :
         ReadWriteProperty<Any?, Pair<LocalTime, LocalTime>> {
 
         override operator fun getValue(thisRef: Any?, property: KProperty<*>): Pair<LocalTime, LocalTime> {
@@ -103,6 +104,14 @@ class LocalTimeRangePreference(context: Context, attributeSet: AttributeSet, def
 
         override fun setValue(thisRef: Any?, property: KProperty<*>, value: Pair<LocalTime, LocalTime>) {
             sharedPreferences.edit().putString(key, localTimeRangeToString(value)).apply()
+        }
+    }
+
+    class ReadOnlyDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Pair<LocalTime, LocalTime>) :
+        ReadOnlyProperty<Any?, Pair<LocalTime, LocalTime>> {
+
+        override operator fun getValue(thisRef: Any?, property: KProperty<*>): Pair<LocalTime, LocalTime> {
+            return sharedPreferences.getString(key, "")?.let { stringToLocalTimeRange(it) } ?: default
         }
     }
 

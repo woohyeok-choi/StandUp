@@ -2,16 +2,21 @@ package kr.ac.kaist.iclab.standup.common
 
 import java.time.DayOfWeek
 import java.util.*
+import java.util.concurrent.TimeUnit
 
-class LocalTime(val hour: Int, val minute: Int, val second: Int) : Comparable<LocalTime> {
-    fun toMillis(nowMillis: Long = System.currentTimeMillis()) : Long {
-        return GregorianCalendar.getInstance(TimeZone.getDefault()).apply {
+data class LocalTime(val hour: Int, val minute: Int, val second: Int) : Comparable<LocalTime> {
+    fun asTodayLocalTimeMillis(nowMillis: Long = System.currentTimeMillis()) =
+        GregorianCalendar.getInstance(TimeZone.getDefault()).apply {
             timeInMillis = nowMillis
             set(Calendar.HOUR_OF_DAY, hour)
             set(Calendar.MINUTE, minute)
             set(Calendar.SECOND, second)
         }.timeInMillis
-    }
+
+
+    fun asOffsetMillis() : Long = TimeUnit.HOURS.toMillis(hour.toLong()) +
+            TimeUnit.MINUTES.toMillis(minute.toLong()) +
+            TimeUnit.SECONDS.toMillis(second.toLong())
 
     override fun compareTo(other: LocalTime): Int {
         var cmp = Integer.compare(hour, other.hour)

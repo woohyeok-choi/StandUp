@@ -2,19 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-            android:id="@+id/menu_bottom_nav_home"
-            android:icon="@drawable/baseline_home_black_24"
-            android:title="@string/menu_bottom_home"/>
+        android:id="@+id/menu_bottom_nav_dashboard"
+        android:icon="@drawable/baseline_dashboard_black_24"
+        android:title="@string/menu_bottom_dashboard"/>
 
     <item
-            android:id="@+id/menu_bottom_nav_dashboard"
-            android:icon="@drawable/baseline_dashboard_black_24"
-            android:title="@string/menu_bottom_dashboard"/>
-
-    <item
-            android:id="@+id/menu_bottom_nav_timeline"
-            android:icon="@drawable/baseline_timeline_black_24"
-            android:title="@string/menu_bottom_timeline"/>
+        android:id="@+id/menu_bottom_nav_timeline"
+        android:icon="@drawable/baseline_timeline_black_24"
+        android:title="@string/menu_bottom_timeline"/>
 
     <item
         android:id="@+id/menu_bottom_nav_config"

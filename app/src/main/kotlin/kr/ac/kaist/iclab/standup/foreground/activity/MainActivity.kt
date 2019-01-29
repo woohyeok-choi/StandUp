@@ -4,32 +4,30 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.view.Menu
+import android.util.Log
 import android.view.MenuItem
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.google.android.gms.tasks.Tasks
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.gun0912.tedpermission.TedPermissionResult
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kr.ac.kaist.iclab.standup.R
 import kr.ac.kaist.iclab.standup.background.SedentaryRecognitionService
+import kr.ac.kaist.iclab.standup.common.Messages.showSnackBar
+import kr.ac.kaist.iclab.standup.common.Messages.showToast
 import kr.ac.kaist.iclab.standup.common.Permissions
 import kr.ac.kaist.iclab.standup.foreground.fragment.ConfigFragment
 import kr.ac.kaist.iclab.standup.foreground.fragment.DashboardFragment
-import kr.ac.kaist.iclab.standup.foreground.fragment.HomeFragment
 import kr.ac.kaist.iclab.standup.foreground.fragment.TimelineFragment
-import kr.ac.kaist.iclab.standup.util.showSnackBar
-import kr.ac.kaist.iclab.standup.util.showToast
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val fragment = when (item.itemId) {
-            R.id.menu_bottom_nav_home -> HomeFragment()
-            R.id.menu_bottom_nav_dashboard -> DashboardFragment()
-            R.id.menu_bottom_nav_timeline -> TimelineFragment()
-            R.id.menu_bottom_nav_config -> ConfigFragment()
+            R.id.menu_bottom_nav_dashboard -> DashboardFragment.newInstance()
+            R.id.menu_bottom_nav_timeline -> TimelineFragment.newInstance()
+            R.id.menu_bottom_nav_config -> ConfigFragment.newInstance()
             else -> null
         }
         fragment?.let {
@@ -37,6 +35,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 .replace(R.id.container, it)
                 .commit()
         }
+        supportActionBar?.title = item.title
 
         return fragment != null
     }
@@ -46,15 +45,18 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setSupportActionBar(toolBar)
+
         navigation.setOnNavigationItemSelectedListener(this)
-        navigation.selectedItemId = R.id.menu_bottom_nav_home
+        navigation.selectedItemId = R.id.menu_bottom_nav_dashboard
     }
 
     override fun onStart() {
         super.onStart()
         Permissions.requestPermission(this) { isAlreadyGranted, isGranted ->
             if(isAlreadyGranted || isGranted) {
-                ContextCompat.startForegroundService(this, SedentaryRecognitionService.newIntent(this))
+               ContextCompat.startForegroundService(this, SedentaryRecognitionService.newIntent(this))
             }
 
             if(!isAlreadyGranted) {

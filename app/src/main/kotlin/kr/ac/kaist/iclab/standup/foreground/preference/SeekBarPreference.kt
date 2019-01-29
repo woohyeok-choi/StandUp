@@ -1,15 +1,18 @@
 package kr.ac.kaist.iclab.standup.foreground.preference
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.util.Log
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
-import androidx.preference.SwitchPreferenceCompat
 import com.xw.repo.BubbleSeekBar
 import kr.ac.kaist.iclab.standup.R
+import kotlin.properties.ReadOnlyProperty
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 class SeekBarPreference(context: Context, attributeSet: AttributeSet, defStyleAttr: Int): Preference(context, attributeSet, defStyleAttr), BubbleSeekBar.OnProgressChangedListener {
     constructor(context: Context, attributeSet: AttributeSet) : this(context, attributeSet, 0)
@@ -56,8 +59,8 @@ class SeekBarPreference(context: Context, attributeSet: AttributeSet, defStyleAt
     override fun onBindViewHolder(holder: PreferenceViewHolder?) {
         Log.d(javaClass.simpleName, "onBindViewHolder()")
 
-        (holder?.findViewById(android.R.id.title) as? TextView)?.text = title
-        (holder?.findViewById(android.R.id.summary) as? TextView)?.text = summary
+        (holder?.findViewById(android.R.id.title) as? AppCompatTextView)?.text = title
+        (holder?.findViewById(android.R.id.summary) as? AppCompatTextView)?.text = summary
 
         (holder?.findViewById(R.id.seekBar) as? BubbleSeekBar)?.apply {
 
@@ -95,4 +98,16 @@ class SeekBarPreference(context: Context, attributeSet: AttributeSet, defStyleAt
 
     override fun getProgressOnFinally(bubbleSeekBar: BubbleSeekBar?, progress: Int, progressFloat: Float,
                                       fromUser: Boolean) { }
+
+    class ReadOnlyDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Int) :
+        ReadOnlyProperty<Any?, Int> {
+        override fun getValue(thisRef: Any?, property: KProperty<*>): Int = sharedPreferences.getInt(key, default)
+    }
+
+    class ReadWriteDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Int) :
+        ReadWriteProperty<Any?, Int> {
+        override fun getValue(thisRef: Any?, property: KProperty<*>): Int = sharedPreferences.getInt(key, default)
+
+        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) = sharedPreferences.edit().putInt(key, value).apply()
+    }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -22,8 +23,7 @@
         android:clipChildren="false"
         android:clipToPadding="false">
 
-        <TextView
-            android:text="TEST"
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@android:id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,8 +32,8 @@
             android:ellipsize="marquee"
             android:fadingEdge="horizontal" />
 
-        <TextView android:id="@android:id/summary"
-            android:text="zxcvzxcvzxcvz"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@android:id/summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@android:id/title"
@@ -58,4 +58,4 @@
                 app:bsb_thumb_color="@color/bar_selector"/>
         </RelativeLayout>
     </RelativeLayout>
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

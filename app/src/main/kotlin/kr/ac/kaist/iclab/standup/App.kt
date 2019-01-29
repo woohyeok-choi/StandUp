@@ -2,7 +2,8 @@ package kr.ac.kaist.iclab.standup
 
 import android.app.Application
 import io.objectbox.BoxStore
-import kr.ac.kaist.iclab.standup.data.MyObjectBox
+import io.objectbox.DebugFlags
+import kr.ac.kaist.iclab.standup.entity.MyObjectBox
 
 class App: Application() {
 
@@ -14,6 +15,7 @@ class App: Application() {
         super.onCreate()
 
         boxStore = MyObjectBox.builder()
+            .debugFlags(DebugFlags.LOG_TRANSACTIONS_READ)
             .maxSizeInKByte(1024 * 1024 * 2)
             .androidContext(applicationContext)
             .name("statnd-up")

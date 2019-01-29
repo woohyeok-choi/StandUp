@@ -5,12 +5,13 @@ import android.content.SharedPreferences
 import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.view.View
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.preference.*
 import com.dpro.widgets.OnWeekdaysChangeListener
 import com.dpro.widgets.WeekdaysPicker
 import kr.ac.kaist.iclab.standup.R
 import kr.ac.kaist.iclab.standup.common.DayOfWeek
+import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -38,8 +39,8 @@ class DaysOfWeekPreference(context: Context, attrs: AttributeSet, defStyleAttr: 
     }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder?) {
-        (holder?.findViewById(android.R.id.title) as? TextView)?.text = title
-        (holder?.findViewById(android.R.id.summary) as? TextView)?.text = summary
+        (holder?.findViewById(android.R.id.title) as? AppCompatTextView)?.text = title
+        (holder?.findViewById(android.R.id.summary) as? AppCompatTextView)?.text = summary
 
         (holder?.findViewById(R.id.dayPicker) as? WeekdaysPicker)?.apply {
             selectedDays = currentValue.map { it.id }
@@ -56,13 +57,19 @@ class DaysOfWeekPreference(context: Context, attrs: AttributeSet, defStyleAttr: 
         currentValue = value.map { DayOfWeek.valueOf(it) }.toSet()
     }
 
-    class Delegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Set<DayOfWeek>) : ReadWriteProperty<Any?, Set<DayOfWeek>> {
+    class ReadWriteDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Set<DayOfWeek>) : ReadWriteProperty<Any?, Set<DayOfWeek>> {
         override fun getValue(thisRef: Any?, property: KProperty<*>): Set<DayOfWeek> {
             return sharedPreferences.getStringSet(key, setOf())?.map { DayOfWeek.valueOf(it) }?.toSet() ?: default
         }
 
         override fun setValue(thisRef: Any?, property: KProperty<*>, value: Set<DayOfWeek>) {
             sharedPreferences.edit().putStringSet(key, value.map { it.name }.toSet()).apply()
+        }
+    }
+
+    class ReadOnlyDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Set<DayOfWeek>) : ReadOnlyProperty<Any?, Set<DayOfWeek>> {
+        override fun getValue(thisRef: Any?, property: KProperty<*>): Set<DayOfWeek> {
+            return sharedPreferences.getStringSet(key, setOf())?.map { DayOfWeek.valueOf(it) }?.toSet() ?: default
         }
     }
 

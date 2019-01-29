@@ -11,8 +11,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kr.ac.kaist.iclab.standup.R
+import kr.ac.kaist.iclab.standup.common.Messages.showSnackBar
 import kr.ac.kaist.iclab.standup.common.RequestCodes.REQUEST_CODE_GOOGLE_SIGN_IN
-import kr.ac.kaist.iclab.standup.util.showSnackBar
 
 class SignInActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

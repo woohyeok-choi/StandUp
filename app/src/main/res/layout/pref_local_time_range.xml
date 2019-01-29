@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -22,8 +23,7 @@
         android:clipChildren="false"
         android:clipToPadding="false">
 
-        <TextView
-            android:text="TEST"
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@android:id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,8 +32,8 @@
             android:ellipsize="marquee"
             android:fadingEdge="horizontal" />
 
-        <TextView android:id="@android:id/summary"
-            android:text="zxcvzxcvzxcvz"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@android:id/summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@android:id/title"
@@ -48,9 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/rangeStart"
-                android:text="zxcvzxcv"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/bar_track"
                 android:layout_width="wrap_content"
@@ -79,9 +78,8 @@
                 app:mrb_pinRadius="0dp"
                 app:mrb_selectorSize="6dp"/>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/rangeEnd"
-                android:text="zxcvzxcv"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/bar_track"
                 android:layout_width="wrap_content"
@@ -91,6 +89,4 @@
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>
     </RelativeLayout>
-
-
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>
