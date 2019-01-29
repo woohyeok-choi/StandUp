@@ -34,8 +34,8 @@ android {
         applicationId "kr.ac.kaist.iclab.standup"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.1.2"
+        versionCode 5
+        versionName "1.1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         resValue "string", "google_web_client_id", "45945771037-u5adtdnfj5llctnt6ga3i0j1vrgkkofa.apps.googleusercontent.com"

@@ -146,7 +146,6 @@ class DashboardFragment : Fragment() {
 
         /** Build Bar Dataset */
         val weeklyDataSetOfDailyAvg = stats.sortedBy { it.index }.map {
-            Log.d(javaClass.simpleName, "avgStats = ${it.index.toFloat()} - ${TimeUnit.MILLISECONDS.toMinutes(it.stat?.avgDurationMillis ?: 0).toFloat()}")
             BarEntry(it.index.toFloat(), TimeUnit.MILLISECONDS.toMinutes(it.stat?.avgDurationMillis ?: 0).toFloat())
         }.let {entries ->
             BarDataSet(entries, labelGroupDailyAvg).apply {
@@ -157,7 +156,6 @@ class DashboardFragment : Fragment() {
         }
 
         val weeklyDataSetOfDailyTotal = stats.sortedBy { it.index }.map {
-            Log.d(javaClass.simpleName, "totalStats = ${it.index.toFloat()} - ${TimeUnit.MILLISECONDS.toMinutes(it.stat?.totalDurationMillis ?: 0).toFloat()}")
             BarEntry(it.index.toFloat(), TimeUnit.MILLISECONDS.toMinutes(it.stat?.totalDurationMillis ?: 0).toFloat())
         }.let { entries ->
             BarDataSet(entries, labelGroupDailyTotal).apply {

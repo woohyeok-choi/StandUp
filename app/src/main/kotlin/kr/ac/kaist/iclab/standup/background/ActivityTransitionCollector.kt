@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.*
 import kr.ac.kaist.iclab.standup.common.Actions.ACTION_TRANSITION_UPDATE
 import kr.ac.kaist.iclab.standup.common.RequestCodes.REQUEST_CODE_TRANSITION_UPDATE
-import java.util.concurrent.TimeUnit
 
 class ActivityTransitionCollector private constructor(){
     private val transitionRequest = ActivityTransitionRequest(

@@ -16,9 +16,9 @@ class RootActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(javaClass.simpleName, "onCreate()")
-        /** For Test */
+/*        *//** For Test *//*
         TestGenerator.generatePhysicalActivities(100, App.boxStore.boxFor())
-        /** */
+        *//** */
         PreferenceManager.setDefaultValues(this, R.xml.preference, false)
 
         val currentUser = FirebaseAuth.getInstance().currentUser

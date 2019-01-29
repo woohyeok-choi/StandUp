@@ -29,7 +29,7 @@ class SedentaryRecognitionService : Service() {
                 acquire()
             }
         }
-
+        activityTransitionCollector.start(this)
         eventHandler.register(this)
         eventHandler.handleActionEnterToStill(this, SystemClock.elapsedRealtime())
     }
@@ -38,7 +38,6 @@ class SedentaryRecognitionService : Service() {
         Log.d(javaClass.simpleName, "onStartCommand()")
         Notifications.notifyServiceRunning(this, EventHandler.buildStandUpAction(this))
 
-        activityTransitionCollector.start(this)
         return START_STICKY
     }
 
