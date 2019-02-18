@@ -8,11 +8,14 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import io.objectbox.kotlin.boxFor
 import kotlinx.android.synthetic.main.activity_main.*
+import kr.ac.kaist.iclab.standup.App
 import kr.ac.kaist.iclab.standup.R
 import kr.ac.kaist.iclab.standup.background.SedentaryRecognitionService
 import kr.ac.kaist.iclab.standup.common.Messages.showToast
 import kr.ac.kaist.iclab.standup.common.Permissions
+import kr.ac.kaist.iclab.standup.entity.EventLog
 import kr.ac.kaist.iclab.standup.foreground.fragment.ConfigFragment
 import kr.ac.kaist.iclab.standup.foreground.fragment.DashboardFragment
 import kr.ac.kaist.iclab.standup.foreground.fragment.TimelineFragment
@@ -40,7 +43,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         setSupportActionBar(toolBar)
 
         navigation.setOnNavigationItemSelectedListener(this)
@@ -49,6 +51,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onStart() {
         super.onStart()
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "MainActivity", mapOf("Started" to true))
+
         Permissions.requestPermission(this) { isAlreadyGranted, isGranted ->
             if(isAlreadyGranted || isGranted) {
                ContextCompat.startForegroundService(this, SedentaryRecognitionService.newIntent(this))
@@ -68,6 +72,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             showToast(this, R.string.msg_normal_back_pressed_twice)
             Handler().postDelayed({isBackPressedOnce = false}, 2000)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "MainActivity", mapOf("Started" to false))
     }
 
     companion object {

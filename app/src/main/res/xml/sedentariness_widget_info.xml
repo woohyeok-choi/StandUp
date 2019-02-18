@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/widget_sedentary_stat"
+    android:initialLayout="@layout/widget_sedentary_stat"
+    android:minWidth="180dp"
+    android:minHeight="40dp"
+    android:previewImage="@drawable/app_widget_preview"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="900000"
+    android:widgetCategory="home_screen|keyguard"/>

@@ -58,20 +58,36 @@ class ConfigManager private constructor(context: Context) {
      * Preferences which are internally set
      */
     var interventionSnoozeUntil by LongReadWriteDelegate(
-        pref, context.getString(R.string.pref_intervention_snooze_until), 0
+        pref, context.getString(R.string.pref_status_intervention_snooze_until), 0
+    )
+
+    var lastFileSessionUri by StringReadWriteDelegate(pref, "last_file_session_uri", "")
+
+    var lastFileAborted by StringReadWriteDelegate(pref, "last_file_aborted", "")
+
+    fun toMap() : Map<String, Any> = mapOf(
+        "interventionInitIntervalMin" to interventionInitIntervalMin,
+        "interventionRetryIntervalMin" to interventionRetryIntervalMin,
+        "interventionSnoozeDurationMin" to interventionSnoozeDurationMin,
+        "interventionSnoozeUntil" to interventionSnoozeUntil,
+        "interventionShouldSnooze" to interventionShouldSnooze,
+        "interventionDailyTimeRange" to interventionDailyTimeRange,
+        "interventionDaysOfWeek" to interventionDaysOfWeek
     )
 
     fun toPrettyPrint() : String {
-        return "nowElapsedTime = ${SystemClock.elapsedRealtime()}, " +
-                "interventionInitIntervalMin = $interventionInitIntervalMin, " +
-                "interventionRetryIntervalMin = $interventionRetryIntervalMin, " +
-                "interventionSnoozeDurationMin = $interventionSnoozeDurationMin, " +
-                "interventionSnoozeUntil = $interventionSnoozeUntil, " +
-                "interventionShouldSnooze = $interventionShouldSnooze, " +
-                "interventionDailyTimeRange = $interventionDailyTimeRange, " +
-                "interventionDaysOfWeek = $interventionDaysOfWeek"
+        return toMap().toString()
     }
 
+    class StringReadOnlyDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: String) : ReadOnlyProperty<Any?, String> {
+        override fun getValue(thisRef: Any?, property: KProperty<*>): String = sharedPreferences.getString(key, default)  ?: default
+    }
+
+    class StringReadWriteDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: String) : ReadWriteProperty<Any?, String> {
+        override operator fun getValue(thisRef: Any?, property: KProperty<*>): String = sharedPreferences.getString(key, default) ?: default
+
+        override operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String) = sharedPreferences.edit().putString(key, value).apply()
+    }
 
     class LongReadOnlyDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Long) : ReadOnlyProperty<Any?, Long> {
         override fun getValue(thisRef: Any?, property: KProperty<*>): Long = sharedPreferences.getLong(key, default)

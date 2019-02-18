@@ -66,8 +66,8 @@
         app:title="@string/pref_category_status_title">
 
         <Preference
-            app:key="@string/pref_intervention_snooze_until"
-            app:title="@string/pref_intervention_snooze_until_title"
+            app:key="@string/pref_status_intervention_snooze_until"
+            app:title="@string/pref_status_intervention_snooze_until_title"
             app:selectable="false"/>
 
         <Preference
@@ -80,7 +80,27 @@
             app:title="@string/pref_status_sedentariness_title"
             app:selectable="false"/>
 
+        <Preference
+            app:key="@string/pref_status_account"
+            app:title="@string/pref_status_account_title"
+            app:selectable="false"/>
     </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="@string/pref_category_etc"
+        app:title="@string/pref_category_debug_etc">
+
+        <Preference
+            app:key="@string/pref_etc_app_usage"
+            app:title="@string/pref_etc_app_usage_title"/>
+
+        <Preference
+            app:key="@string/pref_etc_sign_out"
+            app:title="@string/pref_etc_sign_out_title"/>
+
+    </PreferenceCategory>
+
+
 
 
 </androidx.preference.PreferenceScreen>

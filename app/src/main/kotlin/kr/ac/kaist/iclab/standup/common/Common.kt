@@ -14,10 +14,15 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
 import com.google.android.material.snackbar.Snackbar
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import kr.ac.kaist.iclab.standup.R
+import kr.ac.kaist.iclab.standup.background.SyncManager
 import kr.ac.kaist.iclab.standup.common.RequestCodes.REQUEST_CODE_LAUNCH_FROM_NOTIFICATION
 import kr.ac.kaist.iclab.standup.foreground.activity.MainActivity
 import java.text.SimpleDateFormat
@@ -34,6 +39,12 @@ object Actions {
     const val ACTION_INTERVENTION_TRIGGER = "$PACKAGE_NAME.ACTION_INTERVENTION_TRIGGER"
     const val ACTION_INTERVENTION_SNOOZED = "$PACKAGE_NAME.ACTION_INTERVENTION_SNOOZED"
     const val ACTION_INTERVENTION_DISMISS = "$PACKAGE_NAME.ACTION_INTERVENTION_DISMISS"
+
+    const val ACTION_PSEUDO_INTERVENTION_TRIGGER = "$PACKAGE_NAME.ACTION_PSEUDO_INTERVENTION_TRIGGER"
+    const val ACTION_PSEUDO_EXIT_FROM_STILL = "$PACKAGE_NAME.ACTION_PSEUDO_EXIT_FROM_STILL"
+
+    const val ACTION_REFRESH_WIDGET = "$PACKAGE_NAME.ACTION_REFRESH_WIDGET"
+
 }
 
 object RequestCodes {
@@ -46,6 +57,8 @@ object RequestCodes {
 
     const val REQUEST_CODE_GOOGLE_SIGN_IN = 0x0007
     const val REQUEST_CODE_LAUNCH_FROM_NOTIFICATION = 0x0008
+
+    const val REQUEST_CODE_REFRESH_WIDGET = 0x0009
 }
 
 object Notifications {
@@ -74,10 +87,10 @@ object Notifications {
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val name = context.getString(R.string.noti_silent_channel_name)
             val desc = context.getString(R.string.noti_silent_channel_desc)
-            val importance = NotificationManager.IMPORTANCE_LOW
+            val importance = NotificationManager.IMPORTANCE_MIN
             val channel = NotificationChannel(ID_NOTIFICATION_SILENT_CHANNEL, name, importance).apply {
                 description = desc
-                lockscreenVisibility = NotificationCompat.VISIBILITY_PRIVATE
+                lockscreenVisibility = NotificationCompat.VISIBILITY_SECRET
                 enableLights(false)
                 enableLights(false)
             }
@@ -181,7 +194,8 @@ object Permissions {
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.WAKE_LOCK
+        Manifest.permission.WAKE_LOCK,
+        Manifest.permission.RECEIVE_BOOT_COMPLETED
     )
 
     fun checkPermission(context: Context): Boolean = REQUIRED_PERMISSIONS.all {
@@ -238,6 +252,9 @@ object Messages {
 
 object DateTimes {
     private val COMPACT_FORMATTER = SimpleDateFormat("MM.dd", Locale.US)
+    private val DEFAULT_FORMATTER = SimpleDateFormat("yy.MM.dd HH.mm.ss", Locale.US)
+
+    fun formatDateTime(millis: Long) = DEFAULT_FORMATTER.format(GregorianCalendar.getInstance(TimeZone.getDefault()).apply { timeInMillis = millis }.time)
 
     fun formatDateTime(context: Context, millis: Long) = DateUtils.formatDateTime(context, millis, DateUtils.FORMAT_SHOW_TIME or DateUtils.FORMAT_SHOW_DATE)
 
@@ -347,5 +364,16 @@ object DateTimes {
     fun localTimeToElapsedTime(target: Long) : Long {
         val diff = System.currentTimeMillis() - target
         return SystemClock.elapsedRealtime() - diff
+    }
+}
+
+object WorkerUtil {
+    inline fun <reified T: Worker> periodicWork(interval: Long, unit: TimeUnit) {
+        val request = PeriodicWorkRequestBuilder<T>(interval, unit).build()
+        WorkManager.getInstance().enqueueUniquePeriodicWork(T::class.java.simpleName, ExistingPeriodicWorkPolicy.KEEP, request)
+    }
+
+    inline fun <reified T: Worker> cancel() {
+        WorkManager.getInstance().cancelUniqueWork(T::class.java.simpleName)
     }
 }

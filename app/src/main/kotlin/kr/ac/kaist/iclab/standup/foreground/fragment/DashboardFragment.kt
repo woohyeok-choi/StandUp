@@ -2,7 +2,6 @@ package kr.ac.kaist.iclab.standup.foreground.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +22,7 @@ import kr.ac.kaist.iclab.standup.App
 import kr.ac.kaist.iclab.standup.BuildConfig
 import kr.ac.kaist.iclab.standup.R
 import kr.ac.kaist.iclab.standup.common.*
+import kr.ac.kaist.iclab.standup.entity.EventLog
 import kr.ac.kaist.iclab.standup.entity.PhysicalActivity
 import kr.ac.kaist.iclab.standup.foreground.LoadStatus
 import kr.ac.kaist.iclab.standup.foreground.adapter.DayViewPagerAdapter
@@ -52,6 +52,18 @@ class DashboardFragment : Fragment() {
 
         loadSedentaryChart(box, now, dailyFrom, dailyTo)
         loadActiveChart(box, now, dailyFrom, dailyTo)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "DashboardFragment", mapOf("Started" to true))
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "DashboardFragment", mapOf("Started" to false))
     }
 
     override fun onDestroy() {
@@ -238,7 +250,7 @@ class DashboardFragment : Fragment() {
         chart.invalidate()
     }
 
-    private fun loadSedentaryChart(box: Box<PhysicalActivity>, dayStart: Long, dailyFrom: LocalTime, dailyTo: LocalTime) = Tasks.call(Executors.newSingleThreadExecutor(), Callable {
+    private fun loadSedentaryChart(box: Box<PhysicalActivity>, dayStart: Long, dailyFrom: HourMin, dailyTo: HourMin) = Tasks.call(Executors.newSingleThreadExecutor(), Callable {
         sedentaryStatus.postValue(LoadStatus.loading())
 
         val results = (0..7).map {
@@ -259,7 +271,7 @@ class DashboardFragment : Fragment() {
         }
     }
 
-    private fun loadActiveChart(box: Box<PhysicalActivity>, dayStart: Long, dailyFrom: LocalTime, dailyTo: LocalTime) = Tasks.call(Executors.newSingleThreadExecutor(), Callable {
+    private fun loadActiveChart(box: Box<PhysicalActivity>, dayStart: Long, dailyFrom: HourMin, dailyTo: HourMin) = Tasks.call(Executors.newSingleThreadExecutor(), Callable {
         activeStatus.postValue(LoadStatus.loading())
 
         val results = (0..7).map {

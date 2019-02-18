@@ -17,20 +17,18 @@ import com.google.android.gms.location.DetectedActivity
 import io.objectbox.kotlin.boxFor
 import kr.ac.kaist.iclab.standup.App
 import kr.ac.kaist.iclab.standup.R
+import kr.ac.kaist.iclab.standup.common.*
 import kr.ac.kaist.iclab.standup.common.Actions.ACTION_INTERVENTION_DISMISS
 import kr.ac.kaist.iclab.standup.common.Actions.ACTION_INTERVENTION_SNOOZED
 import kr.ac.kaist.iclab.standup.common.Actions.ACTION_INTERVENTION_TRIGGER
 import kr.ac.kaist.iclab.standup.common.Actions.ACTION_MOCK_EXIT_FROM_STILL
 import kr.ac.kaist.iclab.standup.common.Actions.ACTION_TRANSITION_UPDATE
-import kr.ac.kaist.iclab.standup.common.DayOfWeek
-import kr.ac.kaist.iclab.standup.common.LocalTime
 import kr.ac.kaist.iclab.standup.common.Notifications.dismissIntervention
 import kr.ac.kaist.iclab.standup.common.RequestCodes.REQUEST_CODE_INTERVENTION_SNOOZED
 import kr.ac.kaist.iclab.standup.common.RequestCodes.REQUEST_CODE_INTERVENTION_TRIGGER
-import kr.ac.kaist.iclab.standup.common.ConfigManager
 import kr.ac.kaist.iclab.standup.common.DateTimes.elapsedTimeToLocalTime
-import kr.ac.kaist.iclab.standup.common.Notifications
 import kr.ac.kaist.iclab.standup.common.Notifications.notifyIntervention
+import kr.ac.kaist.iclab.standup.common.Notifications.notifyStandUp
 import kr.ac.kaist.iclab.standup.common.RequestCodes.REQUEST_CODE_INTERVENTION_DISMISS
 import kr.ac.kaist.iclab.standup.common.RequestCodes.REQUEST_CODE_MOCK_EXIT_FROM_STILL
 import kr.ac.kaist.iclab.standup.entity.*
@@ -45,18 +43,19 @@ class EventHandler private constructor(): BroadcastReceiver() {
         if (context == null || intent == null) return
 
         when(intent.action) {
-            ACTION_TRANSITION_UPDATE -> if(ActivityTransitionResult.hasResult(intent)) {
-                ActivityTransitionResult.extractResult(intent)?.transitionEvents?.filter {
-                    it.activityType == DetectedActivity.STILL
-                }?.sortedBy {
-                    it.elapsedRealTimeNanos
-                }?.forEach {
-                    val elapsedTime = TimeUnit.NANOSECONDS.toMillis(it.elapsedRealTimeNanos)
-
-                    if(it.transitionType == ActivityTransition.ACTIVITY_TRANSITION_ENTER) {
-                        handleActionEnterToStill(context, elapsedTime)
-                    } else {
-                        handleActionExitFromStill(context, elapsedTime)
+            ACTION_TRANSITION_UPDATE -> {
+                if(ActivityTransitionResult.hasResult(intent)) {
+                    ActivityTransitionResult.extractResult(intent)?.transitionEvents?.filter {
+                        it.activityType == DetectedActivity.STILL
+                    }?.sortedBy {
+                        it.elapsedRealTimeNanos
+                    }?.forEach {
+                        val elapsedTime = TimeUnit.NANOSECONDS.toMillis(it.elapsedRealTimeNanos)
+                        handleActionTransitionUpdate(context, elapsedTime, it.transitionType == ActivityTransition.ACTIVITY_TRANSITION_ENTER)
+                    }
+                } else  {
+                    MockActivityTransitionResult.fromIntent(intent).let {
+                        handleActionTransitionUpdate(context, it.elapsedRealTime, it.transitionType == ActivityTransition.ACTIVITY_TRANSITION_ENTER)
                     }
                 }
             }
@@ -77,7 +76,15 @@ class EventHandler private constructor(): BroadcastReceiver() {
         context.unregisterReceiver(this)
     }
 
-    fun handleActionEnterToStill(context: Context, elapsedTime: Long) {
+    private fun handleActionTransitionUpdate(context: Context, elapsedTime: Long, isEntered: Boolean) {
+        if(isEntered) {
+            handleActionEnterToStill(context, elapsedTime)
+        } else {
+            handleActionExitFromStill(context, elapsedTime)
+        }
+    }
+
+    private fun handleActionEnterToStill(context: Context, elapsedTime: Long) {
         val tag = javaClass.simpleName
 
         val latestSedentaryEvent = with(App.boxStore.boxFor<PhysicalActivity>()) {
@@ -123,7 +130,8 @@ class EventHandler private constructor(): BroadcastReceiver() {
         val interval = TimeUnit.MINUTES.toMillis(configManager.interventionInitIntervalMin.toLong())
 
         if(interval <= duration && checkNotificationAvailable(configManager)) {
-            Notifications.notifyStandUp(context, duration, buildDismissAction(context), buildSnoozeAction(context))
+            notifyStandUp(context, duration, buildDismissAction(context), buildSnoozeAction(context))
+            EventLog.new(App.boxStore.boxFor(), "Interaction", "Trigger promotion")
         }
     }
 
@@ -137,6 +145,7 @@ class EventHandler private constructor(): BroadcastReceiver() {
 
         if(checkNotificationAvailable(configManager)) {
             notifyIntervention(context, duration, buildDismissAction(context), buildSnoozeAction(context), buildStandUpAction(context))
+            EventLog.new(App.boxStore.boxFor<EventLog>(), "Interaction", "Trigger intervention")
         }
 
         val triggerAt = nowElapsedTime + retryInterval
@@ -151,16 +160,19 @@ class EventHandler private constructor(): BroadcastReceiver() {
 
     private fun handleActionSnooze(context: Context) {
         dismissIntervention(context)
-
         val configManager = ConfigManager.getInstance(context)
         val now = SystemClock.elapsedRealtime()
         val snoozeDelay = TimeUnit.MINUTES.toMillis(configManager.interventionSnoozeDurationMin.toLong())
 
         configManager.interventionSnoozeUntil = now + snoozeDelay
+
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "Snooze", mapOf("Until" to now + snoozeDelay))
     }
 
     private fun handleActionDismiss(context: Context) {
         dismissIntervention(context)
+
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "Dismiss")
     }
 
     private fun handleMockExitFromStill(context: Context) {
@@ -181,7 +193,9 @@ class EventHandler private constructor(): BroadcastReceiver() {
                 null
             }
         } ?: return
-        Log.d(javaClass.simpleName, "handleMockExitFromStill")
+
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "Mock exit")
+
         val configManager = ConfigManager.getInstance(context)
         val interval = TimeUnit.MINUTES.toMillis(configManager.interventionInitIntervalMin.toLong())
         val triggerAt = nowElapsedMillis + interval
@@ -215,7 +229,7 @@ class EventHandler private constructor(): BroadcastReceiver() {
     private fun checkNotificationAvailable(configManager: ConfigManager) : Boolean {
         val nowElapsedTime = SystemClock.elapsedRealtime()
         val nowDay = DayOfWeek.today()
-        val nowLocalTime = LocalTime.now()
+        val nowLocalTime = HourMin.now()
 
         val shouldSnooze = configManager.interventionShouldSnooze
         val snoozeUntil = configManager.interventionSnoozeUntil

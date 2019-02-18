@@ -19,12 +19,13 @@ object TestGenerator {
        val maxDuration = TimeUnit.HOURS.toMillis(6).toInt()
 
        (0..size).map {
-           val eventType = if(it % 2 == 0) PhysicalActivity.TYPE_SEDENTARY else PhysicalActivity.TYPE_ACTIVE
+           val eventType = if(it % 2 == 0) PhysicalActivity.TYPE_ACTIVE else PhysicalActivity.TYPE_SEDENTARY
            val endTime = if(it == 0) 0 else prevEndTime
            val startTime = endTime - random.nextInt(minDuration, maxDuration)
 
            prevEndTime = startTime
            PhysicalActivity(
+               userId = "test",
                eventType = eventType,
                startElapsedTimeMillis = startTime,
                startTimeMillis = DateTimes.elapsedTimeToLocalTime(startTime),

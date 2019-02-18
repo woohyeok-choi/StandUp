@@ -1,7 +1,6 @@
 package kr.ac.kaist.iclab.standup.foreground.fragment
 
 import android.os.Bundle
-import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,12 +17,12 @@ import kr.ac.kaist.iclab.standup.R
 import kr.ac.kaist.iclab.standup.common.DateTimes
 import kr.ac.kaist.iclab.standup.common.Messages
 import kr.ac.kaist.iclab.standup.common.StandUpException
+import kr.ac.kaist.iclab.standup.entity.EventLog
 import kr.ac.kaist.iclab.standup.entity.PhysicalActivity
 import kr.ac.kaist.iclab.standup.entity.PhysicalActivity_
 import kr.ac.kaist.iclab.standup.foreground.LoadStatus
 import kr.ac.kaist.iclab.standup.foreground.RangedEntityDataSource
 import kr.ac.kaist.iclab.standup.foreground.adapter.TimelineAdapter
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class TimelineFragment : Fragment() {
@@ -38,6 +37,18 @@ class TimelineFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupViews()
         setupListeners()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "TimelineFragment", mapOf("Started" to true))
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "TimelineFragment", mapOf("Started" to false))
     }
 
     private fun setupViews() {

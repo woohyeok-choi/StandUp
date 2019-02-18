@@ -11,6 +11,9 @@
     <string name="general_daily_total">일일 총합</string>
     <string name="general_none_collection">측정치 없음</string>
     <string name="general_weekly_average">최근 일주일 평균</string>
+    <string name="general_accepted">허용됨</string>
+    <string name="general_rejected">거부됨</string>
+    <string name="general_unknown">알 수 없음</string>
 
     <string name="menu_bottom_dashboard">대시보드</string>
     <string name="menu_bottom_timeline">타임라인</string>
@@ -19,11 +22,14 @@
     <string name="btn_permission_request">권한 설정</string>
 
     <string name="msg_error_permission_denied">정상적인 서비스 제공을 위해 권한을 허용하셔야 합니다. 앱을 다시 실행해주세요.</string>
+    <string name="msg_error_google_sign_in">구글 로그인에 실패하였습니다.</string>
+    <string name="msg_error_firebase_auth">구글 계정과 연동에 실패하였습니다.</string>
     <string name="msg_error_failed_to_load_data">데이터를 불러올 수 없습니다.</string>
     <string name="msg_error_empty_data">데이터가 없습니다.</string>
 
     <string name="msg_normal_permission_grated">권한이 정상적으로 허용되었습니다. 서비스를 시작합니다.</string>
     <string name="msg_normal_back_pressed_twice">종료하시려면 뒤로 가기를 한번 더 눌러주세요.</string>
+    <string name="msg_normal_request_app_usage_collect">StandUp 이 사용 정보에 접근할 수 있도록 허용해주세요.</string>
 
     <string name="item_title_sedentary">앉아 있었습니다.</string>
     <string name="item_title_stand_up">움직였습니다.</string>
@@ -61,6 +67,12 @@
     <string name="pref_category_status">pref_category_status</string>
     <string name="pref_category_status_title">상태</string>
 
+    <string name="pref_category_etc">pref_category_etc</string>
+    <string name="pref_category_debug_etc">기타</string>
+
+    <string name="pref_category_debug">pref_category_debug</string>
+    <string name="pref_category_debug_title">디버그</string>
+
     <!-- Preference keys and corresponding title/summary visible to users-->
     <string name="pref_intervention_init_interval">pref_intervention_init_interval</string>
     <string name="pref_intervention_init_interval_title">알림 전달 주기 (분)</string>
@@ -87,15 +99,36 @@
     <string name="pref_intervention_days_of_week_summary">기상 알림을 전달할 요일을 설정합니다.</string>
 
     <!-- Preference keys disallow to set by user -->
-    <string name="pref_intervention_snooze_until">pref_intervention_snooze_until</string>
-    <string name="pref_intervention_snooze_until_title">방해 금지 모드 기간</string>
-    <string name="pref_intervention_snooze_until_summary_off">없음</string>
+    <string name="pref_status_intervention_snooze_until">pref_status_intervention_snooze_until</string>
+    <string name="pref_status_intervention_snooze_until_title">방해 금지 모드 기간</string>
+    <string name="pref_status_intervention_snooze_until_summary_off">없음</string>
 
     <string name="pref_status_collector">pref_status_collector</string>
     <string name="pref_status_collector_title">행동 수집기 상태</string>
 
     <string name="pref_status_sedentariness">pref_status_sedentariness</string>
     <string name="pref_status_sedentariness_title">인식된 행동</string>
+
+    <string name="pref_status_account">pref_status_account</string>
+    <string name="pref_status_account_title">계정</string>
+
+    <!-- Preferences keys for ETC -->
+
+    <string name="pref_etc_app_usage">pref_etc_app_usage</string>
+    <string name="pref_etc_app_usage_title">앱 사용 내역 추적</string>
+
+    <string name="pref_etc_sign_out">pref_etc_sign_out</string>
+    <string name="pref_etc_sign_out_title">로그아웃</string>
+
+
+    <!-- Preference keys for debug purpose -->
+    <string name="pref_intervention_debug_action_stand_up">pref_intervention_debug_action_stand_up</string>
+    <string name="pref_intervention_debug_action_stand_up_title">일어남 알림 전달</string>
+
+    <string name="pref_intervention_debug_action_intervention">pref_intervention_debug_action_prolonged_setting</string>
+    <string name="pref_intervention_debug_action_prolonged_setting_title">오래 앉음 알림 전달</string>
+
+
     <string-array name="weekdays">
         <item>MONDAY</item>
         <item>TUESDAY</item>
@@ -103,4 +136,6 @@
         <item>THURSDAY</item>
         <item>FRIDAY</item>
     </string-array>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

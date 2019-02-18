@@ -10,4 +10,5 @@
     <color name="time">#4285f4</color>
     <color name="bar_selector">#ffa000</color>
     <color name="bar_track">#607d8b</color>
+    <color name="light_white">#CCFFFFFF</color>
 </resources>

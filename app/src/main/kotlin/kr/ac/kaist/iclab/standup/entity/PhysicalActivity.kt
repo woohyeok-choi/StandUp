@@ -2,6 +2,7 @@ package kr.ac.kaist.iclab.standup.entity
 
 import android.os.SystemClock
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import io.objectbox.Box
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
@@ -12,11 +13,13 @@ import kr.ac.kaist.iclab.standup.common.DateTimes.localTimeToElapsedTime
 @Entity
 data class PhysicalActivity(
     @Id var id: Long = 0L,
+    val userId: String,
     val eventType: String,
     val startElapsedTimeMillis: Long,
     val startTimeMillis: Long,
     var endElapsedTimeMillis: Long = 0L,
-    var endTimeMillis: Long = 0L
+    var endTimeMillis: Long = 0L,
+    var isExported: Boolean = false
 ) {
     fun duration() = if(endElapsedTimeMillis == 0L) SystemClock.elapsedRealtime() - startElapsedTimeMillis else
         endElapsedTimeMillis - startElapsedTimeMillis
@@ -72,7 +75,13 @@ data class PhysicalActivity(
                 box.put(it)
             }
 
-            val newEvent = PhysicalActivity(eventType = eventType, startElapsedTimeMillis = elapsedTime, startTimeMillis = DateTimes.elapsedTimeToLocalTime(elapsedTime))
+            val userId = FirebaseAuth.getInstance().currentUser?.email ?: ""
+            val newEvent = PhysicalActivity(
+                userId = userId,
+                eventType = eventType,
+                startElapsedTimeMillis = elapsedTime,
+                startTimeMillis = DateTimes.elapsedTimeToLocalTime(elapsedTime)
+            )
             box.put(newEvent)
             Log.d(PhysicalActivity::class.java.simpleName, "new(): previousEvent = $previousEvent, newEvent = $newEvent")
             return newEvent

@@ -9,10 +9,14 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.os.SystemClock
 import android.util.Log
+import kr.ac.kaist.iclab.standup.BuildConfig
+import kr.ac.kaist.iclab.standup.common.MockActivityTransitionResult
 import kr.ac.kaist.iclab.standup.common.Notifications
 
 class SedentaryRecognitionService : Service() {
     private val eventHandler = EventHandler.getInstance()
+    private val pseudoEventHandler = PseudoEventHandler.getInstance()
+
     private val activityTransitionCollector = ActivityTransitionCollector.getInstance()
     private var wakeLock: PowerManager.WakeLock? = null
 
@@ -30,8 +34,14 @@ class SedentaryRecognitionService : Service() {
             }
         }
         activityTransitionCollector.start(this)
+
         eventHandler.register(this)
-        eventHandler.handleActionEnterToStill(this, SystemClock.elapsedRealtime())
+
+        if(BuildConfig.DEBUG_MODE) {
+            pseudoEventHandler.register(this)
+        }
+
+        sendBroadcast(MockActivityTransitionResult.still(SystemClock.elapsedRealtime()))
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -51,6 +61,10 @@ class SedentaryRecognitionService : Service() {
 
          activityTransitionCollector.stop(this)
          eventHandler.unregister(this)
+
+         if(BuildConfig.DEBUG_MODE) {
+             pseudoEventHandler.unregister(this)
+         }
      }
 
     companion object {

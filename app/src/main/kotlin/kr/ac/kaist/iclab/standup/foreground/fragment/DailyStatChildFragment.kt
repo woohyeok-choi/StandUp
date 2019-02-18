@@ -95,7 +95,7 @@ class DailyStatChildFragment : Fragment() {
             val from = dayStart + dailyFrom.asOffsetMillis()
             val to = dayStart + dailyTo.asOffsetMillis()
             val box = App.boxStore.boxFor<PhysicalActivity>()
-            return@Callable PhysicalActivity.statSedentary(box, from, to)
+            return@Callable PhysicalActivity.statSedentary(box, from, to) ?: throw EmptyResultException()
         }).addOnCompleteListener {
             if(it.isSuccessful) {
                 status.postValue(LoadStatus.success())

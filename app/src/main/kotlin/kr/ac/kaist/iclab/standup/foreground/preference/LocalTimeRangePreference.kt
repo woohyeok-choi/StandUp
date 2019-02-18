@@ -9,7 +9,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import com.appyvet.materialrangebar.RangeBar
 import kr.ac.kaist.iclab.standup.R
-import kr.ac.kaist.iclab.standup.common.LocalTime
+import kr.ac.kaist.iclab.standup.common.HourMin
 import java.lang.Exception
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
@@ -18,7 +18,7 @@ import kotlin.reflect.KProperty
 class LocalTimeRangePreference(context: Context, attributeSet: AttributeSet, defStyleAttr: Int): Preference(context, attributeSet, defStyleAttr), RangeBar.OnRangeBarChangeListener {
     constructor(context: Context, attributeSet: AttributeSet) : this(context, attributeSet, 0)
 
-    private var currentValue: Pair<LocalTime, LocalTime> = DEFAULT_VALUE
+    private var currentValue: Pair<HourMin, HourMin> = DEFAULT_VALUE
     private var txtRangeStart: AppCompatTextView? = null
     private var txtRangeEnd: AppCompatTextView? = null
 
@@ -35,14 +35,14 @@ class LocalTimeRangePreference(context: Context, attributeSet: AttributeSet, def
     }
 
     override fun onGetDefaultValue(a: TypedArray?, index: Int): Any {
-        return a?.getString(index) ?: localTimeRangeToString(DEFAULT_VALUE)
+        return a?.getString(index) ?: hourMinRangeToString(DEFAULT_VALUE)
     }
 
     override fun onSetInitialValue(defaultValue: Any?) {
         val value = if(defaultValue is String) {
             defaultValue
         } else {
-            getPersistedString(localTimeRangeToString(DEFAULT_VALUE))
+            getPersistedString(hourMinRangeToString(DEFAULT_VALUE))
         }
         updateValue(value)
     }
@@ -54,17 +54,20 @@ class LocalTimeRangePreference(context: Context, attributeSet: AttributeSet, def
         txtRangeStart = holder?.findViewById(R.id.rangeStart) as? AppCompatTextView
         txtRangeEnd = holder?.findViewById(R.id.rangeEnd) as? AppCompatTextView
 
-        txtRangeStart?.text = formatLocalTime(currentValue.first)
-        txtRangeEnd?.text = formatLocalTime(currentValue.second)
+        txtRangeStart?.text = formatHourMin(currentValue.first)
+        txtRangeEnd?.text = formatHourMin(currentValue.second)
 
         (holder?.findViewById(R.id.rangeBar) as? RangeBar)?.apply {
-            tickStart = 0F
-            tickEnd = 60F * 24
+            tickStart = MIN_VALUE
+            tickEnd = MAX_VALUE
             setTickInterval(tickIntervalMin.toFloat())
             setPinTextFormatter {
-                val hour = (it.toInt() / 60).toString().padStart(2, '0')
-                val min = (it.toInt() % 60).toString().padStart(2, '0')
-                return@setPinTextFormatter "$hour:$min"
+                val hour = (it.toInt() / 60)
+                val minute = (it.toInt() - 60 * hour)
+                val hourStr = hour.toString().padStart(2, '0')
+                val minuteStr = minute.toString().padStart(2, '0')
+
+                return@setPinTextFormatter "$hourStr:$minuteStr"
             }
 
             currentValue.let {
@@ -83,7 +86,6 @@ class LocalTimeRangePreference(context: Context, attributeSet: AttributeSet, def
         currentValue = stringToLocalTimeRange(value) ?: DEFAULT_VALUE
     }
 
-
     override fun onRangeChangeListener(rangeBar: RangeBar?, leftPinIndex: Int, rightPinIndex: Int,
                                        leftPinValue: String?, rightPinValue: String?) {
         val value = if(leftPinValue != null && rightPinValue != null) "$leftPinValue-$rightPinValue" else null
@@ -95,42 +97,44 @@ class LocalTimeRangePreference(context: Context, attributeSet: AttributeSet, def
         }
     }
 
-    class ReadWriteDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Pair<LocalTime, LocalTime>) :
-        ReadWriteProperty<Any?, Pair<LocalTime, LocalTime>> {
+    class ReadWriteDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Pair<HourMin, HourMin>) :
+        ReadWriteProperty<Any?, Pair<HourMin, HourMin>> {
 
-        override operator fun getValue(thisRef: Any?, property: KProperty<*>): Pair<LocalTime, LocalTime> {
+        override operator fun getValue(thisRef: Any?, property: KProperty<*>): Pair<HourMin, HourMin> {
             return sharedPreferences.getString(key, "")?.let { stringToLocalTimeRange(it) } ?: default
         }
 
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Pair<LocalTime, LocalTime>) {
-            sharedPreferences.edit().putString(key, localTimeRangeToString(value)).apply()
+        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Pair<HourMin, HourMin>) {
+            sharedPreferences.edit().putString(key, hourMinRangeToString(value)).apply()
         }
     }
 
-    class ReadOnlyDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Pair<LocalTime, LocalTime>) :
-        ReadOnlyProperty<Any?, Pair<LocalTime, LocalTime>> {
+    class ReadOnlyDelegate(private val sharedPreferences: SharedPreferences, private val key: String, private val default: Pair<HourMin, HourMin>) :
+        ReadOnlyProperty<Any?, Pair<HourMin, HourMin>> {
 
-        override operator fun getValue(thisRef: Any?, property: KProperty<*>): Pair<LocalTime, LocalTime> {
+        override operator fun getValue(thisRef: Any?, property: KProperty<*>): Pair<HourMin, HourMin> {
             return sharedPreferences.getString(key, "")?.let { stringToLocalTimeRange(it) } ?: default
         }
     }
 
     companion object {
         val DEFAULT_VALUE = Pair(
-            LocalTime(9, 0, 0),
-            LocalTime(21, 0, 0)
+            HourMin(9, 0),
+            HourMin(21, 0)
         )
+        private const val MIN_VALUE = 0F
+        private const val MAX_VALUE = 24 * 60F
 
-        fun stringToLocalTimeRange(formatTime: String) : Pair<LocalTime, LocalTime>? {
+        fun stringToLocalTimeRange(formatTime: String) : Pair<HourMin, HourMin>? {
             return try {
                 val parts = formatTime.split("-")
                 val fromStr = parts[0].split(":")
                 val toStr = parts[1].split(":")
-                val fromLocalTime = LocalTime(
-                    fromStr[0].toInt(), fromStr[1].toInt(), 0
+                val fromLocalTime = HourMin(
+                    fromStr[0].toInt(), fromStr[1].toInt()
                 )
-                val toLocalTime = LocalTime(
-                    toStr[0].toInt(), toStr[1].toInt(), 0
+                val toLocalTime = HourMin(
+                    toStr[0].toInt(), toStr[1].toInt()
                 )
                 Pair(fromLocalTime, toLocalTime)
             } catch (e: Exception) {
@@ -138,10 +142,10 @@ class LocalTimeRangePreference(context: Context, attributeSet: AttributeSet, def
             }
         }
 
-        private fun formatLocalTime(localTime: LocalTime) = "${localTime.hour.toString().padStart(2, '0')}:${localTime.minute.toString().padStart(2, '0')}"
+        private fun formatHourMin(hourMin: HourMin) = "${hourMin.hour.toString().padStart(2, '0')}:${hourMin.minute.toString().padStart(2, '0')}"
 
-        fun localTimeRangeToString(timeRange: Pair<LocalTime, LocalTime>) : String {
-            return "${formatLocalTime(timeRange.first)}-${formatLocalTime(timeRange.second)}"
+        fun hourMinRangeToString(timeRange: Pair<HourMin, HourMin>) : String {
+            return "${formatHourMin(timeRange.first)}-${formatHourMin(timeRange.second)}"
         }
     }
 }
