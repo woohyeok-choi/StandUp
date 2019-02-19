@@ -57,13 +57,13 @@ class DashboardFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        EventLog.new(App.boxStore.boxFor(), "Interaction", "DashboardFragment", mapOf("Started" to true))
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "DashboardFragment", mapOf("Started" to true).toString())
     }
 
     override fun onStop() {
         super.onStop()
 
-        EventLog.new(App.boxStore.boxFor(), "Interaction", "DashboardFragment", mapOf("Started" to false))
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "DashboardFragment", mapOf("Started" to false).toString())
     }
 
     override fun onDestroy() {
@@ -250,45 +250,50 @@ class DashboardFragment : Fragment() {
         chart.invalidate()
     }
 
-    private fun loadSedentaryChart(box: Box<PhysicalActivity>, dayStart: Long, dailyFrom: HourMin, dailyTo: HourMin) = Tasks.call(Executors.newSingleThreadExecutor(), Callable {
-        sedentaryStatus.postValue(LoadStatus.loading())
+    private fun loadSedentaryChart(box: Box<PhysicalActivity>, dayStart: Long, dailyFrom: HourMin, dailyTo: HourMin) {
+        Tasks.call(Executors.newSingleThreadExecutor(), Callable {
+            sedentaryStatus.postValue(LoadStatus.loading())
 
-        val results = (0..7).map {
-            val anchor = dayStart - it * TimeUnit.DAYS.toMillis(1)
-            val from = anchor + dailyFrom.asOffsetMillis()
-            val to = anchor + dailyTo.asOffsetMillis()
-            DailyStat(7 - it, anchor, PhysicalActivity.statSedentary(box, from, to))
-        }
+            val results = (0..7).map {
+                val anchor = dayStart - it * TimeUnit.DAYS.toMillis(1)
+                val from = anchor + dailyFrom.asOffsetMillis()
+                val to = anchor + dailyTo.asOffsetMillis()
+                DailyStat(7 - it, anchor, PhysicalActivity.statSedentary(box, from, to))
+            }
 
-        if(results.all { it.stat == null }) throw EmptyResultException()
-        return@Callable results
-    }).addOnCompleteListener {
-        if(it.isSuccessful) {
-            sedentaryStatus.postValue(LoadStatus.success())
-            sedentaryStats.postValue(it.result)
-        } else {
-            sedentaryStatus.postValue(LoadStatus.failed(it.exception))
+            if (results.all { it.stat == null }) throw EmptyResultException()
+            return@Callable results
+        }).addOnCompleteListener {
+            if (it.isSuccessful) {
+                sedentaryStatus.postValue(LoadStatus.success())
+                sedentaryStats.postValue(it.result)
+            } else {
+                sedentaryStatus.postValue(LoadStatus.failed(it.exception))
+            }
         }
     }
 
-    private fun loadActiveChart(box: Box<PhysicalActivity>, dayStart: Long, dailyFrom: HourMin, dailyTo: HourMin) = Tasks.call(Executors.newSingleThreadExecutor(), Callable {
-        activeStatus.postValue(LoadStatus.loading())
+    private fun loadActiveChart(box: Box<PhysicalActivity>, dayStart: Long, dailyFrom: HourMin, dailyTo: HourMin) {
 
-        val results = (0..7).map {
-            val anchor = dayStart - it * TimeUnit.DAYS.toMillis(1)
-            val from = anchor + dailyFrom.asOffsetMillis()
-            val to = anchor + dailyTo.asOffsetMillis()
-            DailyStat(7 - it, anchor, PhysicalActivity.statActive(box, from, to))
-        }
+        Tasks.call(Executors.newSingleThreadExecutor(), Callable {
+            activeStatus.postValue(LoadStatus.loading())
 
-        if(results.all { it.stat == null }) throw EmptyResultException()
-        return@Callable results
-    }).addOnCompleteListener {
-        if(it.isSuccessful) {
-            activeStatus.postValue(LoadStatus.success())
-            activeStats.postValue(it.result)
-        } else {
-            activeStatus.postValue(LoadStatus.failed(it.exception))
+            val results = (0..7).map {
+                val anchor = dayStart - it * TimeUnit.DAYS.toMillis(1)
+                val from = anchor + dailyFrom.asOffsetMillis()
+                val to = anchor + dailyTo.asOffsetMillis()
+                DailyStat(7 - it, anchor, PhysicalActivity.statActive(box, from, to))
+            }
+
+            if (results.all { it.stat == null }) throw EmptyResultException()
+            return@Callable results
+        }).addOnCompleteListener {
+            if (it.isSuccessful) {
+                activeStatus.postValue(LoadStatus.success())
+                activeStats.postValue(it.result)
+            } else {
+                activeStatus.postValue(LoadStatus.failed(it.exception))
+            }
         }
     }
 

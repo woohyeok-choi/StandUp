@@ -42,13 +42,13 @@ class TimelineFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        EventLog.new(App.boxStore.boxFor(), "Interaction", "TimelineFragment", mapOf("Started" to true))
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "TimelineFragment", mapOf("Started" to true).toString())
     }
 
     override fun onStop() {
         super.onStop()
 
-        EventLog.new(App.boxStore.boxFor(), "Interaction", "TimelineFragment", mapOf("Started" to false))
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "TimelineFragment", mapOf("Started" to false).toString())
     }
 
     private fun setupViews() {

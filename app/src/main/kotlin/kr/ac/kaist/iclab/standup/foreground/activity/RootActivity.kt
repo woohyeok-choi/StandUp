@@ -24,7 +24,7 @@ class RootActivity: AppCompatActivity() {
         Log.d(javaClass.simpleName, "onCreate()")
 
         if(BuildConfig.DEBUG_MODE) {
-            TestGenerator.generatePhysicalActivities(100, App.boxStore.boxFor())
+            //TestGenerator.generatePhysicalActivities(100, App.boxStore.boxFor())
         }
 
         PreferenceManager.setDefaultValues(this, R.xml.preference, false)

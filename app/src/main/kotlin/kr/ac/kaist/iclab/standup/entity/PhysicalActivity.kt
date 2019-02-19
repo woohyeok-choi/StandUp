@@ -13,10 +13,10 @@ import kr.ac.kaist.iclab.standup.common.DateTimes.localTimeToElapsedTime
 @Entity
 data class PhysicalActivity(
     @Id var id: Long = 0L,
-    val userId: String,
     val eventType: String,
     val startElapsedTimeMillis: Long,
     val startTimeMillis: Long,
+    var email: String = "",
     var endElapsedTimeMillis: Long = 0L,
     var endTimeMillis: Long = 0L,
     var isExported: Boolean = false
@@ -30,17 +30,17 @@ data class PhysicalActivity(
         const val TYPE_SEDENTARY = "TYPE_SEDENTARY"
         const val TYPE_ACTIVE = "TYPE_ACTIVE"
 
-        fun sedentary(box: Box<PhysicalActivity>, elapsedTime: Long, previousEvent: PhysicalActivity? = null) =
+        fun sedentary(box: Box<PhysicalActivity>, elapsedTime: Long, previousEvent: PhysicalActivity? = null) : PhysicalActivity =
             new(box, TYPE_SEDENTARY, elapsedTime, previousEvent)
 
-        fun active(box: Box<PhysicalActivity>, elapsedTime: Long, previousEvent: PhysicalActivity? = null) =
+        fun active(box: Box<PhysicalActivity>, elapsedTime: Long, previousEvent: PhysicalActivity? = null) : PhysicalActivity =
             new(box, TYPE_ACTIVE, elapsedTime, previousEvent)
 
-        fun latestActivity(box: Box<PhysicalActivity>) = box.query()
-            .equal(PhysicalActivity_.endElapsedTimeMillis, 0L)
-            .orderDesc(PhysicalActivity_.startElapsedTimeMillis)
-            .build()
-            .findFirst()
+        fun latestActivity(box: Box<PhysicalActivity>) : PhysicalActivity? = box.query()
+                .equal(PhysicalActivity_.endElapsedTimeMillis, 0L)
+                .orderDesc(PhysicalActivity_.startElapsedTimeMillis)
+                .build()
+                .findFirst()
 
         fun statSedentary(box: Box<PhysicalActivity>, fromMillis: Long, toMillis: Long) : Stat? =
             stat(box, fromMillis, toMillis, TYPE_SEDENTARY)
@@ -49,6 +49,8 @@ data class PhysicalActivity(
             stat(box, fromMillis, toMillis, TYPE_ACTIVE)
 
         private fun stat(box: Box<PhysicalActivity>, fromMillis: Long, toMillis: Long, eventType: String) : Stat? {
+            if(box.count() == 0L) return null
+
             val results = box.query()
                 .greater(PhysicalActivity_.endTimeMillis, fromMillis)
                 .or()
@@ -77,7 +79,7 @@ data class PhysicalActivity(
 
             val userId = FirebaseAuth.getInstance().currentUser?.email ?: ""
             val newEvent = PhysicalActivity(
-                userId = userId,
+                email = userId,
                 eventType = eventType,
                 startElapsedTimeMillis = elapsedTime,
                 startTimeMillis = DateTimes.elapsedTimeToLocalTime(elapsedTime)

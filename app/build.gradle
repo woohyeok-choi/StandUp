@@ -33,8 +33,8 @@ android {
         applicationId "kr.ac.kaist.iclab.standup"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 6
-        versionName "1.1.4"
+        versionCode 7
+        versionName "1.1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField "boolean", "DEBUG_MODE", "false"

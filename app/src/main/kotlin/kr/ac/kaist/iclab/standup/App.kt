@@ -17,7 +17,7 @@ class App: Application() {
         boxStore = MyObjectBox.builder()
             .maxSizeInKByte(1024 * 1024 * 2)
             .androidContext(applicationContext)
-            .name("statnd-up")
+            .name("stand-up")
             .build()
     }
 }

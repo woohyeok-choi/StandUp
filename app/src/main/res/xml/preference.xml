@@ -26,7 +26,7 @@
             app:summary="@string/pref_intervention_init_interval_summary"
             app:sbp_min="15"
             app:sbp_max="120"
-            app:defaultValue="60"
+            app:defaultValue="1"
             app:sbp_sectionCount="7"/>
 
         <kr.ac.kaist.iclab.standup.foreground.preference.SeekBarPreference

@@ -40,13 +40,13 @@ class ConfigFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
     override fun onStart() {
         super.onStart()
 
-        EventLog.new(App.boxStore.boxFor(), "Interaction", "ConfigFragment", mapOf("Started" to true))
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "ConfigFragment", mapOf("Started" to true).toString())
     }
 
     override fun onStop() {
         super.onStop()
 
-        EventLog.new(App.boxStore.boxFor(), "Interaction", "ConfigFragment", mapOf("Started" to false))
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "ConfigFragment", mapOf("Started" to false).toString())
     }
 
     override fun onResume() {

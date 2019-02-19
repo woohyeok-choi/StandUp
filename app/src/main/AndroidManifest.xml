@@ -54,14 +54,14 @@
         <activity
             android:name=".foreground.activity.SignInActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".foreground.activity.MainActivity"
             android:excludeFromRecents="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:taskAffinity=""></activity>
+            android:taskAffinity=""/>
 
         <service android:name=".background.SedentaryRecognitionService" />
 

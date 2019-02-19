@@ -59,12 +59,12 @@ class SyncManager(context : Context, params : WorkerParameters) : Worker(context
                 .equal(AppUsageStats_.isExported, false)
                 .build()
 
-            val data = query.find().groupBy { it.userId }
+            val data = query.find().filter { it.email.isNotEmpty() }.groupBy { it.email }
 
             exportData("appUsage", data,
-                "userId,packageName,name,startTimeMillis,startTime,endTimeMillis,endTime,lastTimeUsedMillis,lastTimeUsed,totalTimeForegroundMillis"
+                "email,packageName,name,startTimeMillis,startTime,endTimeMillis,endTime,lastTimeUsedMillis,lastTimeUsed,totalTimeForegroundMillis"
             ) {
-                "${it.userId},${it.packageName},${it.name}," +
+                "${it.email},${it.packageName},${it.name}," +
                         "${it.startTime},${formatDateTime(it.startTime)}," +
                         "${it.endTime},${formatDateTime(it.endTime)}," +
                         "${it.lastTimeTimeUsed},${formatDateTime(it.lastTimeTimeUsed)}," +
@@ -79,11 +79,11 @@ class SyncManager(context : Context, params : WorkerParameters) : Worker(context
                 .equal(EventLog_.isExported, false)
                 .build()
 
-            val data = query.find().groupBy { it.userId }
+            val data = query.find().filter { it.email.isNotEmpty() }.groupBy { it.email }
 
             exportData("log", data,
-                "userId,timestamp,time,tag,message,params") {
-                "${it.userId}$${it.timestamp}$${formatDateTime(it.timestamp)}$${it.tag}$${it.message}$${it.params}"
+                "email,timestamp,time,tag,message,params") {
+                "${it.email}$${it.timestamp}$${formatDateTime(it.timestamp)}$${it.tag}$${it.message}$${it.params}"
             }
 
             query.remove()
@@ -97,12 +97,12 @@ class SyncManager(context : Context, params : WorkerParameters) : Worker(context
                 .build()
 
             val data = query.find()
-            val dataGrouped = data.groupBy { it.userId }
+            val dataGrouped = data.filter { it.email.isNotEmpty() }.groupBy { it.email }
 
             exportData("activity", dataGrouped,
-                "userId,eventType,startElapsedTimeMillis,startTimeMillis,startTime,endElapsedTimeMillis,endTimeMillis,endTime"
+                "email,eventType,startElapsedTimeMillis,startTimeMillis,startTime,endElapsedTimeMillis,endTimeMillis,endTime"
             ) {
-                "${it.userId},${it.eventType}," +
+                "${it.email},${it.eventType}," +
                         "${it.startElapsedTimeMillis},${it.startTimeMillis},${formatDateTime(it.startTimeMillis)}," +
                         "${it.endElapsedTimeMillis},${it.endTimeMillis},${formatDateTime(it.endTimeMillis)}"
             }

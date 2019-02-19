@@ -47,7 +47,7 @@ class SignInActivity: AppCompatActivity() {
                 authFirebaseWithGoogleAccount(account)
             } catch (e: ApiException) {
                 e.printStackTrace()
-                showToast(this, R.string.msg_error_google_sign_in)
+                showToast(this, "${getString(R.string.msg_error_google_sign_in)} - 오류 코드 ${e.statusCode}")
             }
         }
     }
@@ -60,7 +60,7 @@ class SignInActivity: AppCompatActivity() {
                 EventLog.new(App.boxStore.boxFor(),
                     "Interaction",
                     "Sign in",
-                    mapOf("email" to (account.email ?: ""))
+                    mapOf("email" to (account.email ?: "")).toString()
                 )
                 startActivity(MainActivity.newIntent(this))
                 finish()

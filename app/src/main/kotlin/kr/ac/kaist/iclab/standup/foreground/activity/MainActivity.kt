@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kr.ac.kaist.iclab.standup.App
 import kr.ac.kaist.iclab.standup.R
 import kr.ac.kaist.iclab.standup.background.SedentaryRecognitionService
+import kr.ac.kaist.iclab.standup.common.Messages
+import kr.ac.kaist.iclab.standup.common.Messages.showSnackBar
 import kr.ac.kaist.iclab.standup.common.Messages.showToast
 import kr.ac.kaist.iclab.standup.common.Permissions
 import kr.ac.kaist.iclab.standup.entity.EventLog
@@ -44,14 +46,28 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolBar)
-
         navigation.setOnNavigationItemSelectedListener(this)
-        navigation.selectedItemId = R.id.menu_bottom_nav_dashboard
+
+        Permissions.requestPermission(this) { isAlreadyGranted, isGranted ->
+            if(isAlreadyGranted || isGranted) {
+                ContextCompat.startForegroundService(this, SedentaryRecognitionService.newIntent(this))
+                navigation.selectedItemId = R.id.menu_bottom_nav_dashboard
+            }
+
+            if(!isAlreadyGranted) {
+                if(isGranted) {
+                    Messages.showToast(this, R.string.msg_normal_permission_grated)
+                } else {
+                    Messages.showToast(this, R.string.msg_error_permission_denied)
+                    finish()
+                }
+            }
+        }
     }
 
     override fun onStart() {
         super.onStart()
-        EventLog.new(App.boxStore.boxFor(), "Interaction", "MainActivity", mapOf("Started" to true))
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "MainActivity", mapOf("Started" to true).toString())
 
         Permissions.requestPermission(this) { isAlreadyGranted, isGranted ->
             if(isAlreadyGranted || isGranted) {
@@ -76,7 +92,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onStop() {
         super.onStop()
-        EventLog.new(App.boxStore.boxFor(), "Interaction", "MainActivity", mapOf("Started" to false))
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "MainActivity", mapOf("Started" to false).toString())
     }
 
     companion object {

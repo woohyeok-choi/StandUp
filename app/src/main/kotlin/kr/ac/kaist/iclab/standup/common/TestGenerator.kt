@@ -25,7 +25,7 @@ object TestGenerator {
 
            prevEndTime = startTime
            PhysicalActivity(
-               userId = "test",
+               email = "test",
                eventType = eventType,
                startElapsedTimeMillis = startTime,
                startTimeMillis = DateTimes.elapsedTimeToLocalTime(startTime),

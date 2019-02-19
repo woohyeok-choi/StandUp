@@ -11,13 +11,14 @@ import com.google.firebase.auth.FirebaseAuth
 import io.objectbox.Box
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 @Entity
 data class AppUsageStats(
     @Id var id: Long = 0L,
     val queryTime: Long,
-    val userId: String,
+    var email: String = "",
     val name: String,
     val packageName: String,
     val startTime: Long,
@@ -38,10 +39,10 @@ data class AppUsageStats(
             usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, lastQueryTime, now).map { stat ->
                 AppUsageStats(
                     queryTime = now,
-                    userId = FirebaseAuth.getInstance().currentUser?.email ?: "UNKNOWN",
-                    name = packageManager.getApplicationInfo(stat.packageName, PackageManager.GET_META_DATA)?.let { info ->
+                    email = FirebaseAuth.getInstance().currentUser?.email ?: "UNKNOWN",
+                    name = try { packageManager.getApplicationInfo(stat.packageName, PackageManager.GET_META_DATA)?.let { info ->
                             packageManager.getApplicationLabel(info)?.toString()
-                        } ?: "UNKNOWN",
+                        } ?: "UNKNOWN" } catch (e: Exception) {"UNKNOWN"},
                     packageName = stat.packageName,
                     startTime = stat.firstTimeStamp,
                     endTime = stat.lastTimeStamp,

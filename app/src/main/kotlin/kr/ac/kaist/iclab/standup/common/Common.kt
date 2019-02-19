@@ -22,8 +22,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import kr.ac.kaist.iclab.standup.R
+import kr.ac.kaist.iclab.standup.background.AppUsageStatCollector
 import kr.ac.kaist.iclab.standup.background.SyncManager
 import kr.ac.kaist.iclab.standup.common.RequestCodes.REQUEST_CODE_LAUNCH_FROM_NOTIFICATION
+import kr.ac.kaist.iclab.standup.entity.AppUsageStats
 import kr.ac.kaist.iclab.standup.foreground.activity.MainActivity
 import java.text.SimpleDateFormat
 import java.util.*

@@ -166,7 +166,7 @@ class EventHandler private constructor(): BroadcastReceiver() {
 
         configManager.interventionSnoozeUntil = now + snoozeDelay
 
-        EventLog.new(App.boxStore.boxFor(), "Interaction", "Snooze", mapOf("Until" to now + snoozeDelay))
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "Snooze", mapOf("Until" to now + snoozeDelay).toString())
     }
 
     private fun handleActionDismiss(context: Context) {
