@@ -33,12 +33,12 @@ android {
         applicationId "kr.ac.kaist.iclab.standup"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.1.5"
+        versionCode 8
+        versionName "1.1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField "boolean", "DEBUG_MODE", "false"
-        resValue "string", "google_web_client_id", "45945771037-u5adtdnfj5llctnt6ga3i0j1vrgkkofa.apps.googleusercontent.com"
+        resValue "string", "google_web_client_id", "17865110140-chl87s88hs6l9d3hbnh3m0rvebr4smbo.apps.googleusercontent.com"
     }
 
     dexOptions {

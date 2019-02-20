@@ -16,15 +16,11 @@ import kr.ac.kaist.iclab.standup.entity.PhysicalActivity
 import java.util.concurrent.TimeUnit
 import android.content.ComponentName
 
-
-
 /**
  * Implementation of App Widget functionality.
  */
 class SedentaryStatWidget : AppWidgetProvider() {
-
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
@@ -45,37 +41,37 @@ class SedentaryStatWidget : AppWidgetProvider() {
 
     override fun onDisabled(context: Context) {}
 
-    companion object {
-        internal fun updateAppWidget(
-            context: Context, appWidgetManager: AppWidgetManager,
-            appWidgetId: Int
-        ) {
-            val configManager = ConfigManager.getInstance(context)
-            val dayStart = DateTimes.asDayStartMillis(System.currentTimeMillis())
-            val (dailyFrom, dailyTo) = configManager.interventionDailyTimeRange
-            val from = dayStart + dailyFrom.asOffsetMillis()
-            val to = dayStart + dailyTo.asOffsetMillis()
-            val stat = PhysicalActivity.statSedentary(App.boxStore.boxFor(), from, to)
-            val avgText = stat?.avgDurationMillis?.let {
-                "${TimeUnit.MILLISECONDS.toMinutes(it)} ${context.getString(R.string.unit_minute)}"
-            } ?: context.getString(R.string.general_none_collection)
-            val totalText = stat?.totalDurationMillis?.let {
-                "${TimeUnit.MILLISECONDS.toMinutes(it)} ${context.getString(R.string.unit_minute)}"
-            } ?: context.getString(R.string.general_none_collection)
+    private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
+        val configManager = ConfigManager.getInstance(context)
+        val dayStart = DateTimes.asDayStartMillis(System.currentTimeMillis())
+        val (dailyFrom, dailyTo) = configManager.interventionDailyTimeRange
+        val from = dayStart + dailyFrom.asOffsetMillis()
+        val to = dayStart + dailyTo.asOffsetMillis()
+        val views = RemoteViews(context.packageName, R.layout.widget_sedentary_stat)
 
-            val views = RemoteViews(context.packageName, R.layout.widget_sedentary_stat)
+        val stat = PhysicalActivity.statSedentary(App.boxStore.boxFor(), from, to)
 
-            views.setTextViewText(R.id.txtWidgetSedentaryAvg, avgText)
-            views.setTextViewText(R.id.txtWidgetTotalAvg, totalText)
-
-            val refreshIntent = Intent(context, SedentaryStatWidget::class.java).apply {
-                action = ACTION_REFRESH_WIDGET
-            }.let {
-                PendingIntent.getBroadcast(context, RequestCodes.REQUEST_CODE_REFRESH_WIDGET, it, PendingIntent.FLAG_UPDATE_CURRENT)
-            }
-            views.setOnClickPendingIntent(R.id.btnWidgetRefresh, refreshIntent)
-            appWidgetManager.updateAppWidget(appWidgetId, views)
+        if(stat != null) {
+            views.setTextViewText(R.id.txtWidgetSedentaryAvg,
+                "${TimeUnit.MILLISECONDS.toMinutes(stat.avgDurationMillis)} ${context.getString(R.string.unit_minute)}")
+            views.setTextViewText(R.id.txtWidgetTotalAvg,
+                "${TimeUnit.MILLISECONDS.toMinutes(stat.totalDurationMillis)} ${context.getString(R.string.unit_minute)}"
+            )
+        } else {
+            views.setTextViewText(R.id.txtWidgetSedentaryAvg, context.getString(R.string.general_none_collection))
+            views.setTextViewText(R.id.txtWidgetTotalAvg, context.getString(R.string.general_none_collection))
         }
+
+        val refreshIntent = Intent(context, SedentaryStatWidget::class.java).apply {
+            action = ACTION_REFRESH_WIDGET
+        }.let { intent ->
+            PendingIntent.getBroadcast(context, RequestCodes.REQUEST_CODE_REFRESH_WIDGET, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+        views.setOnClickPendingIntent(R.id.btnWidgetRefresh, refreshIntent)
+
+        appWidgetManager.updateAppWidget(appWidgetId, views)
+        Log.d(SedentaryStatWidget::class.java.simpleName, "updateComplete")
     }
+
 }
 

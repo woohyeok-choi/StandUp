@@ -73,7 +73,7 @@ class DashboardFragment : Fragment() {
     private fun setupViews(context: Context) {
         val from = context.packageManager.getPackageInfo(BuildConfig.APPLICATION_ID, 0).firstInstallTime.let {
             DateTimes.asDayStartMillis(it)
-        } - TimeUnit.DAYS.toMillis(3)
+        }
 
         val to = System.currentTimeMillis().let {
             DateTimes.asDayStartMillis(it)

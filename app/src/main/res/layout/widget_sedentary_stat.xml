@@ -1,69 +1,75 @@
-<GridLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:background="@drawable/widget_background"
-    android:rowCount="2"
-    android:columnCount="3"
-
     android:padding="@dimen/widget_margin">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="fill"
-        android:textSize="12sp"
-        android:layout_column="0"
-        android:gravity="center"
-        android:textColor="@color/primary_dark"
-        android:layout_columnWeight="1"
-        android:text="평균 앉은 시간"/>
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="12sp"
-        android:layout_gravity="fill"
-        android:layout_column="1"
-        android:id="@+id/lblWidgetTotalAvg"
-        android:textColor="@color/secondary_dark"
-        android:layout_columnWeight="1"
-        android:text="총 앉은 시간"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textColor="@color/primary_dark"
+            android:layout_columnWeight="1"
+            android:text="@string/item_title_average_sedentary_time"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="fill"
-        android:gravity="center"
-        android:id="@+id/txtWidgetSedentaryAvg"
-        android:layout_column="0"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/primary"
-        android:layout_columnWeight="1"
-        android:text="1400분"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill"
+            android:gravity="center"
+            android:id="@+id/txtWidgetSedentaryAvg"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:layout_columnWeight="1"
+            android:text="@string/general_none_collection"/>
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="fill"
-        android:layout_column="1"
-        android:id="@+id/txtWidgetTotalAvg"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/secondary"
-        android:layout_columnWeight="1"
-        android:text="1440분"/>
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:layout_gravity="fill"
+            android:id="@+id/lblWidgetTotalAvg"
+            android:textColor="@color/secondary_dark"
+            android:layout_columnWeight="1"
+            android:text="@string/item_title_total_sedentary_time"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="fill"
+            android:id="@+id/txtWidgetTotalAvg"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/secondary"
+            android:layout_columnWeight="1"
+            android:text="@string/general_none_collection"/>
+    </LinearLayout>
+
 
     <ImageButton
         android:id="@+id/btnWidgetRefresh"
-        android:layout_row="0"
-        android:layout_column="2"
-        android:layout_rowSpan="2"
-        android:layout_gravity="fill_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:background="@android:color/transparent"
         android:tint="@android:color/darker_gray"
         android:src="@drawable/baseline_replay_black_24"/>
-</GridLayout>
+</LinearLayout>

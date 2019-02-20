@@ -49,8 +49,6 @@ data class PhysicalActivity(
             stat(box, fromMillis, toMillis, TYPE_ACTIVE)
 
         private fun stat(box: Box<PhysicalActivity>, fromMillis: Long, toMillis: Long, eventType: String) : Stat? {
-            if(box.count() == 0L) return null
-
             val results = box.query()
                 .greater(PhysicalActivity_.endTimeMillis, fromMillis)
                 .or()

@@ -49,11 +49,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         navigation.setOnNavigationItemSelectedListener(this)
 
         Permissions.requestPermission(this) { isAlreadyGranted, isGranted ->
-            if(isAlreadyGranted || isGranted) {
-                ContextCompat.startForegroundService(this, SedentaryRecognitionService.newIntent(this))
-                navigation.selectedItemId = R.id.menu_bottom_nav_dashboard
-            }
-
             if(!isAlreadyGranted) {
                 if(isGranted) {
                     Messages.showToast(this, R.string.msg_normal_permission_grated)
@@ -61,6 +56,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                     Messages.showToast(this, R.string.msg_error_permission_denied)
                     finish()
                 }
+            }
+
+            if(isGranted) {
+                ContextCompat.startForegroundService(this, SedentaryRecognitionService.newIntent(this))
+                navigation.selectedItemId = R.id.menu_bottom_nav_dashboard
             }
         }
     }
