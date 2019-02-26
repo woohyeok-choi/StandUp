@@ -67,8 +67,7 @@
 
         <Preference
             app:key="@string/pref_status_intervention_snooze_until"
-            app:title="@string/pref_status_intervention_snooze_until_title"
-            app:selectable="false"/>
+            app:title="@string/pref_status_intervention_snooze_until_title"/>
 
         <Preference
             app:key="@string/pref_status_collector"

@@ -145,7 +145,7 @@ class EventHandler private constructor(): BroadcastReceiver() {
 
         if(checkNotificationAvailable(configManager)) {
             notifyIntervention(context, duration, buildDismissAction(context), buildSnoozeAction(context), buildStandUpAction(context))
-            EventLog.new(App.boxStore.boxFor<EventLog>(), "Interaction", "Trigger intervention")
+            EventLog.new(App.boxStore.boxFor(), "Interaction", "Trigger intervention")
         }
 
         val triggerAt = nowElapsedTime + retryInterval
@@ -160,13 +160,14 @@ class EventHandler private constructor(): BroadcastReceiver() {
 
     private fun handleActionSnooze(context: Context) {
         dismissIntervention(context)
+
         val configManager = ConfigManager.getInstance(context)
-        val now = SystemClock.elapsedRealtime()
+        val nowLocalTime = System.currentTimeMillis()
         val snoozeDelay = TimeUnit.MINUTES.toMillis(configManager.interventionSnoozeDurationMin.toLong())
 
-        configManager.interventionSnoozeUntil = now + snoozeDelay
+        configManager.interventionSnoozeUntil = nowLocalTime + snoozeDelay
 
-        EventLog.new(App.boxStore.boxFor(), "Interaction", "Snooze", mapOf("Until" to now + snoozeDelay).toString())
+        EventLog.new(App.boxStore.boxFor(), "Interaction", "Snooze", mapOf("Until" to nowLocalTime + snoozeDelay).toString())
     }
 
     private fun handleActionDismiss(context: Context) {
@@ -228,8 +229,9 @@ class EventHandler private constructor(): BroadcastReceiver() {
 
     private fun checkNotificationAvailable(configManager: ConfigManager) : Boolean {
         val nowElapsedTime = SystemClock.elapsedRealtime()
+        val nowMillis = System.currentTimeMillis()
         val nowDay = DayOfWeek.today()
-        val nowLocalTime = HourMin.now()
+        val nowHourMin = HourMin.now()
 
         val shouldSnooze = configManager.interventionShouldSnooze
         val snoozeUntil = configManager.interventionSnoozeUntil
@@ -238,9 +240,9 @@ class EventHandler private constructor(): BroadcastReceiver() {
 
         Log.d(javaClass.simpleName, "nowElapsedTime = $nowElapsedTime, " +
                 "shouldSnooze = $shouldSnooze, snoozeUntil = $snoozeUntil," +
-                "nowDay = $nowDay, availableDays = $days, isInDays = ${nowDay in days}, nowLocalTime = $nowLocalTime, isInLocalTime = ${nowLocalTime in timeRange.first..timeRange.second}")
+                "nowDay = $nowDay, availableDays = $days, isInDays = ${nowDay in days}, nowLocalTime = $nowHourMin, isInLocalTime = ${nowHourMin in timeRange.first..timeRange.second}")
 
-        return (!shouldSnooze && nowElapsedTime >= snoozeUntil && nowDay in days && nowLocalTime in timeRange.first..timeRange.second)
+        return (!shouldSnooze && nowMillis >= snoozeUntil && nowDay in days && nowHourMin in timeRange.first..timeRange.second)
     }
 
     data class Status(val state: State, val triggerAt: Long? = null) {

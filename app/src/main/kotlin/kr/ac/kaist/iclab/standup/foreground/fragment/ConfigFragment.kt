@@ -85,21 +85,18 @@ class ConfigFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             updateSnoozeUntil(context, configManager, snoozeUntilPreference)
             observeCollectorStatus(collectorStatusPreference)
             observeSedentaryStatus(context, sedentaryStatusPreference)
-
         }
     }
 
     private fun updateSnoozeUntil(context: Context, configManager: ConfigManager, preference: Preference) {
         val snoozeUntil = configManager.interventionSnoozeUntil
-        val nowElapsedMillis = SystemClock.elapsedRealtime()
         val nowLocalTime = System.currentTimeMillis()
-        val diff = nowElapsedMillis - snoozeUntil
+        val diff = nowLocalTime - snoozeUntil
 
         if(diff >= 0) {
             preference.setSummary(R.string.pref_status_intervention_snooze_until_summary_off)
         } else {
-            val untilLocalTime = nowLocalTime - diff
-            val dateString = DateUtils.formatDateTime(context, untilLocalTime,
+            val dateString = DateUtils.formatDateTime(context, snoozeUntil,
                 DateUtils.FORMAT_SHOW_TIME or DateUtils.FORMAT_SHOW_DATE)
             preference.summary = "- $dateString"
         }
@@ -139,6 +136,20 @@ class ConfigFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             getString(R.string.pref_etc_app_usage) -> {
                 preference.context?.let { Messages.showToast(it, R.string.msg_normal_request_app_usage_collect) }
                 startActivity(AppUsageStats.setupIntent)
+            }
+            getString(R.string.pref_status_intervention_snooze_until) -> {
+                val context = preference.context
+                val dialog = YesNoDialogFragment.newInstance(getString(R.string.dialog_reset_snooze_until_title), getString(R.string.dialog_reset_snooze_until_message))
+                val configManager = ConfigManager.getInstance(context)
+
+                dialog.setOnDialogOptionSelectedListener {
+                    if(it) {
+                        Messages.showToast(context, R.string.msg_normal_snooze_reset)
+                        configManager.interventionSnoozeUntil = 0L
+                        updateSnoozeUntil(context, configManager, preference)
+                    }
+                }
+                dialog.show(childFragmentManager, javaClass.simpleName)
             }
             getString(R.string.pref_etc_sign_out) -> {
                 FirebaseAuth.getInstance().signOut()
